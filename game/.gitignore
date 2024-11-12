@@ -9,8 +9,6 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-/[Pp]lugins/
-/[Tt]hirdparty/
 
 # If you are using Rider
 .idea/**/shelf/
@@ -87,3 +85,6 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+/[Aa]ssets/[Pp]lugins/
+/[Aa]ssets/**/[Tt]hirdparty/
+/[Aa]ssets/[Tt]hirdparty/

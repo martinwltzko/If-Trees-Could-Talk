@@ -1,0 +1,41 @@
+services:
+  db_postgresql:
+    build: db_postgresql
+    container_name: db_postgresql
+    volumes:
+      - ./db_postgresql/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_NAME: ${POSTGRES_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: ./db_postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: .
+    container_name: backend
+    command:
+      sh -c "python manage.py makemigrations &&
+            python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+        - "8000:8000"
+    environment:
+      POSTGRES_NAME: ${POSTGRES_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - db_postgresql
+
+  nginx:
+    build: nginx
+    container_name: nginx
+    volumes:
+      - .:/code
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
