@@ -25,6 +25,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader {
     
     public Vector2 Direction => inputActions.Player.Move.ReadValue<Vector2>();
     public Vector2 LookDirection => inputActions.Player.Look.ReadValue<Vector2>();
+    public Vector2 MousePosition => Mouse.current.position.ReadValue();
 
     public void EnablePlayerActions() {
         if (inputActions == null) {

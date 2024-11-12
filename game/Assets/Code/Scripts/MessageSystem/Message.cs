@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Code.Scripts.UI;
 using EPOOutline;
 using Interaction;
 using UnityEngine;
@@ -12,6 +14,7 @@ public class Message : MonoBehaviour, IAimingTarget, IInteractable
     private bool _aimingAt, _inRange;
     
     public Transform Transform => transform;
+
     
     private void Start()
     {

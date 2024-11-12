@@ -109,7 +109,7 @@ public class WebHandler : MonoBehaviour
             // Debug.Log("Id:" + dict["id"]);
             // Debug.Log("PlayerId:" + dict["owner"]);
             messages.Add(dict["message"]);
-            Debug.Log("Message:" + dict["message"]);
+            //Debug.Log("Message:" + dict["message"]);
         }
 
         return messages;

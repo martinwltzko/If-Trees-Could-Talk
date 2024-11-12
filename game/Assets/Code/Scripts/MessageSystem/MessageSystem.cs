@@ -23,6 +23,14 @@ public class MessageSystem : MonoBehaviour
     }
 
     [Button]
+    public void SpawnMessages(int count)
+    {
+        var messages = new List<string>();
+        for (int i = 0; i < count; i++) {
+            messages.Add($"Message {i}");
+        }
+        SpawnMessages(messages.ToArray());
+    }
     public void SpawnMessages(string[] messages)
     {
         foreach (var message in _messages)

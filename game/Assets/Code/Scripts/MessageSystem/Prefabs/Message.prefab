@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5522663066088362323}
   - component: {fileID: 3934335848852019498}
   - component: {fileID: 7360547325019711509}
+  - component: {fileID: 3810239900983202709}
   m_Layer: 6
   m_Name: Message
   m_TagString: Untagged
@@ -190,3 +191,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlinable: {fileID: 5522663066088362323}
   message: 
+--- !u!114 &3810239900983202709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8983528258788580064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71a2dbae6f1448c69c4f5afb423b5647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Options:
+  - OptionName: Read
+    OnOptionSelected:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7360547325019711509}
+          m_TargetAssemblyTypeName: Message, Assembly-CSharp
+          m_MethodName: PrintMessage
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
