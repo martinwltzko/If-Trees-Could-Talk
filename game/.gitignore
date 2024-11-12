@@ -12,6 +12,21 @@
 /[Pp]lugins/
 /[Tt]hirdparty/
 
+# If you are using Rider
+.idea/**/shelf/
+.idea/**/workspace.xml
+# Rider ignored files
+.idea/**/.idea.game.iml
+.idea/**/contentModel.xml
+.idea/**/projectSettingsUpdater.xml
+.idea/**/modules.xml
+
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
