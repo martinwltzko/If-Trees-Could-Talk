@@ -16,12 +16,18 @@ namespace AdvancedController
         
         [SerializeField] private OptionProvider defaultOptionProvider;
         
+        //TODO: This is a bit of a hack, should be refactored probably
+        public NoteDisplay NoteDisplay => noteDisplay;
+        [SerializeField] private NoteDisplay noteDisplay;
+        
+        
         private InputReader Input => inputProvider.Input;
         
         private IInteractable _currentInteractable;
         private OptionProvider _currentOptionProvider;
 
         private bool _primaryDown;
+        private bool _optionOverride;
 
 
         private void Start()
@@ -29,22 +35,40 @@ namespace AdvancedController
             Input.Primary += OnPrimary;
         }
         
+        public void OverrideOptionProvider(OptionProvider optionProvider)
+        {
+            _currentOptionProvider = optionProvider;
+            _optionOverride = true;
+        }
+        public void ClearOptionProviderOverride()
+        {
+            _optionOverride = false;
+        }
+        
         private void Update()
         {
-            CheckInteractions(out _currentOptionProvider);
+            CheckInteractions(out var optionProvider);
+            _currentOptionProvider = _optionOverride ? _currentOptionProvider : optionProvider;
             _currentOptionProvider ??= defaultOptionProvider;
 
             selectionCircle.SetOptions(_currentOptionProvider);
             if(_primaryDown) selectionCircle.UpdateSelection(Input.LookDirection);
         }
         
+        private bool _cameraEnabled;
         private void OnPrimary(bool down)
         {
-            if(down) cameraController.enabled = false;
-            if(!down && _primaryDown) cameraController.enabled = true;
+            if (!enabled) return;
+            
+            if (down) {
+                _cameraEnabled = cameraController.enabled;
+                cameraController.enabled = false;
+            }
+            if(!down && _primaryDown) cameraController.enabled = _cameraEnabled;
             
             _primaryDown = down;
-            selectionCircle.OnPrimary(down);
+            selectionCircle.OnPrimary(down, out var option);
+            if (option != null) option.Interact.Invoke(this);
         }
         
         private bool CheckInteractions(out OptionProvider optionProvider)

@@ -50,8 +50,6 @@ public class PlayablePlayer : MonoBehaviour, IAimingTarget, IInteractable
         PlayScene();
     }
     
-    
-    [Button]
     public void PlayScene()
     {
         director.playableAsset = timeline;

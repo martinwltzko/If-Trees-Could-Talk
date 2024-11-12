@@ -13,7 +13,7 @@ namespace Code.Scripts.UI
         public class Option
         {
             public string OptionName;
-            public UnityEvent OnOptionSelected;
+            public UnityEvent<MonoBehaviour> Interact;
         }
     }
 }

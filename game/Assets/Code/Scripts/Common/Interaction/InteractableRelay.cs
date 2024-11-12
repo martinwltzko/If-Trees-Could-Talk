@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityUtils.Aiming;
 
 namespace Interaction
 {
-    public class InteractableRelay : MonoBehaviour, IInteractable
+    public class InteractableRelay : MonoBehaviour, IInteractable, IAimingTarget
     {
         [SerializeField] private UnityEvent _onInteract;
         [SerializeField] private UnityEvent _onFocus;
@@ -23,6 +24,21 @@ namespace Interaction
         public void Release(object sender)
         {
             _onRelease.Invoke();
+        }
+
+        public void OnAimingStart()
+        {
+            
+        }
+
+        public void OnAimingEnd()
+        {
+            
+        }
+        
+        public void DebugPrint(string message)
+        {
+            Debug.Log(message);
         }
     }
 }

@@ -143,7 +143,7 @@ MonoBehaviour:
   renderStyle: 1
   outlineParameters:
     enabled: 1
-    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    color: {r: 1, g: 1, b: 1, a: 1}
     dilateShift: 1
     blurShift: 1
     fillPass:
@@ -205,13 +205,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Options:
   - OptionName: Read
-    OnOptionSelected:
+    Interact:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 7360547325019711509}
           m_TargetAssemblyTypeName: Message, Assembly-CSharp
-          m_MethodName: PrintMessage
-          m_Mode: 1
+          m_MethodName: OpenMessage
+          m_Mode: 0
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

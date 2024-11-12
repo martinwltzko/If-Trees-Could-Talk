@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AdvancedController;
 using Code.Scripts.UI;
 using EPOOutline;
 using Interaction;
@@ -15,6 +16,14 @@ public class Message : MonoBehaviour, IAimingTarget, IInteractable
     
     public Transform Transform => transform;
 
+
+    public void OpenMessage(MonoBehaviour sender)
+    {
+        if (sender is not PlayerInteractions playerInteractions) return;
+
+        Debug.Log("Message opened by " + sender);
+        playerInteractions.NoteDisplay.ReadNote(this);
+    }
     
     private void Start()
     {

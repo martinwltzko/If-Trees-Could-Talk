@@ -53,8 +53,10 @@ public class SelectionCircle : MonoBehaviour
         CheckSelection();
     }
 
-    public void OnPrimary(bool down)
+    public void OnPrimary(bool down, out OptionProvider.Option selectedOption)
     {
+        selectedOption = null;
+        
         if (down)
         {
             _pressed = true;
@@ -71,8 +73,7 @@ public class SelectionCircle : MonoBehaviour
             
             if (_selectedOption!=null && _optionsMapping.TryGetValue(_selectedOption, out var selectedOptionTransform)) {
                 selectedOptionTransform.GetComponent<TextMeshProUGUI>().color = Color.gray;
-                Debug.Log($"Pressed: {_selectedOption.OptionName}");
-                _selectedOption.OnOptionSelected.Invoke();
+                selectedOption = _selectedOption;
             }
 
             _rt.DOSizeDelta(new Vector2(idleScaling, idleScaling), activationSmoothness);
