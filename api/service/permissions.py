@@ -1,14 +1,4 @@
 from rest_framework import permissions
-from dotenv import load_dotenv
-from pathlib import Path
-import requests
-import os
-
-# Get the parent directory of the current working directory
-parent_dir = Path(__file__).resolve().parent.parent
-env_path = parent_dir / '.env'
-# Load environment variables
-load_dotenv(dotenv_path=env_path)
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):

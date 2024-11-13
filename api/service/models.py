@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
+from .validators import VectorFieldValidator
 
 """
 class Player(models.Model):
@@ -18,10 +19,29 @@ class Player(models.Model):
         ordering = ['created']
 """
 
+#TODO
+# class MessageSticker(models.Model):
+#     local_x = models.FloatField(default=0.0) # Local sticker position
+#     local_y = models.FloatField(default=0.0) #
+#     rotation = models.FloatField(default=0.0) # Local sticker rotation on normal to message
+#     date = models.DateTimeField(auto_now_add=True)
+
+
 class Message(models.Model):
     owner = models.CharField(max_length=255, default='server')
     date = models.DateTimeField(auto_now_add=True)
     message = models.TextField()
+
+    # Position and normal in world space to get persistent messages in the game world
+    position = models.JSONField(default={"x":0.0,"y":0.0,"z":0.0}, validators=[VectorFieldValidator])
+    normal = models.JSONField(default={"x":0.0,"y":0.0,"z":0.0}, validators=[VectorFieldValidator])
+
+    # TODO: Message sector
+    # sector = models.CharField(max_length=50, default='world')
+
+    # TODO: Message stickers
+    # stickers = models.ForeignKey(MessageSticker)
+
 
     class Meta:
         ordering = ['date']

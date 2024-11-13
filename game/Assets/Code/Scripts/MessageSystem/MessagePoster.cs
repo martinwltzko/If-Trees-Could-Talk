@@ -43,7 +43,7 @@ public class MessagePoster : MonoBehaviour
     {
         if(!_messageCreated) return;
         
-        WebHandler.Instance.GenerateMessage(_message.message);
+        WebHandler.Instance.GenerateMessage(_message.message, _message.transform.position, _message.transform.forward);
         
         playerInteractions.enabled = true;
         _messageCreated = false;

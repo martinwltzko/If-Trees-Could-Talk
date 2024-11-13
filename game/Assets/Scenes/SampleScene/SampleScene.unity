@@ -149,9 +149,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8a39f8003593354a937489fa673e8ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uri: http://80.115.226.179:8000
-  token: f9023b58-cc75-4050-92bb-3b158193f5b8
+  uri: http://localhost:8000
+  token: 58116bdf-f543-42f1-87c0-c9355b1ea930
   playerId: rGPokHjUIPr05v1Z14pagIMPaih1
+  offlineMode: 0
 --- !u!4 &43226801
 Transform:
   m_ObjectHideFlags: 0
@@ -4394,7 +4395,8 @@ MonoBehaviour:
   messageCount: 200
   messagePrefab: {fileID: 7360547325019711509, guid: f7ae05426560c6644bbf2a1a9c4b79a9,
     type: 3}
-  messageOffset: 0.05
+  messageOffset: 0.02
+  messageScanDistance: 0.5
 --- !u!4 &1959884057
 Transform:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ class AuthTokenAdmin(admin.ModelAdmin):
     list_display = ('user', 'player_id', 'token', 'created', 'expires', 'is_expired')
     search_fields = ('user_username', 'player_id', 'token')
     list_filter = ('expires',)
-    readonly_fields = ('created', 'expires')
+    #readonly_fields = ('created', 'expires')
 
     def is_expired(self, obj):
         return obj.is_expired()

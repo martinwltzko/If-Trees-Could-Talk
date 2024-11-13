@@ -1,14 +1,8 @@
-from django.shortcuts import render
-from django.dispatch import receiver
-from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, permissions, authentication, mixins, generics, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.reverse import reverse
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
 from service.models import AuthToken, Message
 from service.serializers import MessageSerializer
 from .permissions import IsOwnerOrReadOnly
@@ -51,7 +45,7 @@ class MessageList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Gener
     """
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    authentication_classes = [UnityAuthentication, authentication.BasicAuthentication]
+    authentication_classes = [UnityAuthentication,authentication.BasicAuthentication]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, *args, **kwargs):
@@ -68,7 +62,7 @@ class MessageDetails(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generic
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
 
-    authentication_classes = [UnityAuthentication, authentication.BasicAuthentication]
+    authentication_classes = [UnityAuthentication,authentication.BasicAuthentication]
     permission_classes = [permissions.IsAuthenticated,IsOwnerOrReadOnly]
 
     def get(self, request, *args, **kwargs):

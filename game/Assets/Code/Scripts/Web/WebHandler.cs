@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
+using Code.Scripts.MessageSystem;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
@@ -13,8 +15,9 @@ public class WebHandler : MonoBehaviour
     public static WebHandler Instance { get; private set; }
     
     [SerializeField] private string uri = "http://127.0.0.1:8000"; // TODO: Change this to your server's IP
-    [SerializeField] private string token;
-    [SerializeField] private string playerId;
+    [SerializeField, EnableIf("offlineMode")] private string token;
+    [SerializeField, ReadOnly, HideIf("offlineMode")] private string playerId;
+    [SerializeField] private bool offlineMode;
     
     private void Awake()
     {
@@ -28,6 +31,7 @@ public class WebHandler : MonoBehaviour
     
     private async void Start()
     {
+        if (offlineMode) return;
         await UnityServices.InitializeAsync();
         await Authenticate();
     }
@@ -59,10 +63,16 @@ public class WebHandler : MonoBehaviour
     }
     
     [Button]
-    public async void GenerateMessage(string message)
+    public async void GenerateMessage(string message, Vector3 position, Vector3 normal)
     {
         var auth = $"Token {token}";
-        var dataDict = new Dictionary<string, string> { {"playerId", playerId}, {"message", message } };
+        var positionDict = new Dictionary<string, float>() { { "x", position.x }, { "y", position.y }, { "z", position.z } };
+        var normalDict = new Dictionary<string, float>() { { "x", normal.x }, { "y", normal.y }, { "z", normal.z } };
+        var dataDict = new Dictionary<string, object> { 
+            {"message", message }, 
+            {"position", positionDict},
+            {"normal", normalDict}
+        };
         await Request.Post($"{uri}/api/messages/", auth:auth, json:JsonConvert.SerializeObject(dataDict));
     }
     
@@ -70,14 +80,15 @@ public class WebHandler : MonoBehaviour
     public async void UpdateMessage(string id, string message)
     {
         var auth = $"Token {token}";
-        var dataDict = new Dictionary<string, string> { {"playerId", playerId}, {"message", message } };
+        var dataDict = new Dictionary<string, string> { {"message", message } };
         await Request.Put($"{uri}/api/messages/{id}/", auth:auth, json:JsonConvert.SerializeObject(dataDict));
     }
     
     [Button]
-    public async UniTask<string[]> GetMessages(int amount=50, int offset=0)
+    public async UniTask<WebMessage[]> GetMessages(int amount=50, int offset=0)
     {
-        var messages = new List<string>();
+        var messages = new List<WebMessage>();
+        
         Queue<string> queries = new Queue<string>();
         queries.Enqueue($"{uri}/api/messages/?page=1");
 
@@ -86,12 +97,16 @@ public class WebHandler : MonoBehaviour
         {
             var query = queries.Dequeue();
             var msg = await Request.Get(query);
+
+            // Deserialize the JSON response into a Dictionary and get the results part
             var json = JsonConvert.DeserializeObject<Dictionary<string, object>>(msg);
-            var results = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(json["results"].ToString());
-            
-            messages.AddRange(ParseMessages(results));
-            
-            if (json.ContainsKey("next") && amount > results.Count*pages) {
+            var resultsJson = JsonConvert.SerializeObject(json["results"]);
+
+            // Deserialize 'results' directly into a list of WebMessageWrapper
+            var webMessages = JsonConvert.DeserializeObject<List<WebMessage>>(resultsJson);
+            messages.AddRange(webMessages);
+
+            if (json.ContainsKey("next") && amount > webMessages.Count*pages) {
                 if(json["next"]==null) break;
                 queries.Enqueue(json["next"].ToString());
                 pages++;
@@ -99,19 +114,5 @@ public class WebHandler : MonoBehaviour
         }
         
         return messages.ToArray();
-    }
-
-    private List<string> ParseMessages(List<Dictionary<string, string>> results)
-    {
-        var messages = new List<string>();
-        foreach (var dict in results)
-        {
-            // Debug.Log("Id:" + dict["id"]);
-            // Debug.Log("PlayerId:" + dict["owner"]);
-            messages.Add(dict["message"]);
-            //Debug.Log("Message:" + dict["message"]);
-        }
-
-        return messages;
     }
 }

@@ -8,6 +8,8 @@ class MessageSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     owner = serializers.CharField(read_only=True)
     message = serializers.CharField()
+    position = serializers.JSONField()
+    normal = serializers.JSONField()
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -15,6 +17,8 @@ class MessageSerializer(serializers.Serializer):
         print(f"User: {owner}")
         return Message.objects.create(
             id=validated_data.get('id'),
+            position=validated_data.get('position'),
+            normal=validated_data.get('normal'),
             owner=owner,
             message=validated_data.get('message'))
 
