@@ -27,16 +27,16 @@ namespace AdvancedController {
         
         [SerializeField] private Transform cameraTransform;
         
-        private Vector3 _momentum, _savedVelocity, _savedMovementVelocity;
+        private Vector3 _momentum, _savedMovementVelocity;
         
         public event Action<Vector3> OnJump = delegate { };
         public event Action<Vector3> OnLand = delegate { };
         #endregion
         
         bool IsGrounded() => _stateMachine.CurrentState is GroundedState or SlidingState;
-        public Vector3 GetVelocity() => _savedVelocity;
+        public float GetMovementSpeed() => Input.IsRunningKeyPressed() ? stats.runningSpeed : stats.walkingSpeed;
         public Vector3 GetMomentum() => stats.useLocalMomentum ? _tr.localToWorldMatrix * _momentum : _momentum;
-        public Vector3 GetMovementVelocity() => _savedMovementVelocity;
+        public Vector3 GetVelocity() => _savedMovementVelocity;
 
         private void Awake() {
             _tr = transform;
@@ -50,6 +50,7 @@ namespace AdvancedController {
         private void Start()
         {
             Input.Jump += HandleJumpKeyInput;
+            
         }
 
         private void HandleJumpKeyInput(bool isButtonPressed) {
@@ -117,15 +118,16 @@ namespace AdvancedController {
             _mover.SetExtendSensorRange(IsGrounded());
             _mover.SetVelocity(velocity);
             
-            _savedVelocity = velocity;
             _savedMovementVelocity = CalculateMovementVelocity();
             
             ResetJumpKeys();
             
             if (_ceilingDetector != null) _ceilingDetector.Reset();
         }
-        
-        private Vector3 CalculateMovementVelocity() => CalculateMovementDirection() * stats.movementSpeed;
+
+        private Vector3 CalculateMovementVelocity() {
+            return Vector3.Lerp(GetVelocity(), CalculateMovementDirection() * GetMovementSpeed(), Time.fixedDeltaTime*stats.acceleration);
+        }
 
         private Vector3 CalculateMovementDirection() {
             Vector3 direction = cameraTransform == null 
@@ -201,7 +203,7 @@ namespace AdvancedController {
         public void OnGroundContactLost() {
             if (stats.useLocalMomentum) _momentum = _tr.localToWorldMatrix * _momentum;
             
-            Vector3 velocity = GetMovementVelocity();
+            Vector3 velocity = GetVelocity();
             if (velocity.sqrMagnitude >= 0f && _momentum.sqrMagnitude > 0f) {
                 Vector3 projectedMomentum = Vector3.Project(_momentum, velocity.normalized);
                 float dot = VectorMath.GetDotProduct(projectedMomentum.normalized, velocity.normalized);
@@ -226,7 +228,7 @@ namespace AdvancedController {
         }
         
         private void AdjustHorizontalMomentum(ref Vector3 horizontalMomentum, Vector3 movementVelocity) {
-            if (horizontalMomentum.magnitude > stats.movementSpeed) {
+            if (horizontalMomentum.magnitude > GetMovementSpeed()) {
                 if (VectorMath.GetDotProduct(movementVelocity, horizontalMomentum.normalized) > 0f) {
                     movementVelocity = VectorMath.RemoveDotVector(movementVelocity, horizontalMomentum.normalized);
                 }
@@ -234,7 +236,7 @@ namespace AdvancedController {
             }
             else {
                 horizontalMomentum += movementVelocity * (Time.deltaTime * stats.airControlRate);
-                horizontalMomentum = Vector3.ClampMagnitude(horizontalMomentum, stats.movementSpeed);
+                horizontalMomentum = Vector3.ClampMagnitude(horizontalMomentum, GetMovementSpeed());
             }
         }
 

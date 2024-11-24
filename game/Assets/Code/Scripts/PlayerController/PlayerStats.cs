@@ -5,7 +5,9 @@ namespace AdvancedController
     [CreateAssetMenu(menuName = "Player/Player Stats")]
     public class PlayerStats : ScriptableObject
     {
-        public float movementSpeed = 7f;
+        public float walkingSpeed = 2f;
+        public float runningSpeed = 5f;
+        public float acceleration = 100;
         public float airControlRate = 2f;
         public float jumpSpeed = 10f;
         public float jumpDuration = 0.2f;

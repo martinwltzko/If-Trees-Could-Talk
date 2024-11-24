@@ -17,7 +17,7 @@ namespace AdvancedController {
         }
 
         void LateUpdate() {
-            Vector3 velocity = Vector3.ProjectOnPlane(controller.GetMovementVelocity(), tr.parent.up);
+            Vector3 velocity = Vector3.ProjectOnPlane(controller.GetVelocity(), tr.parent.up);
             if (velocity.magnitude < 0.001f) return;
             
             float angleDifference = VectorMath.GetAngle(tr.forward, velocity.normalized, tr.parent.up);

@@ -22,6 +22,7 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader {
     public PlayerInputActions inputActions;
 
     public bool IsJumpKeyPressed() => inputActions.Player.Jump.IsPressed();
+    public bool IsRunningKeyPressed() => inputActions.Player.Run.IsPressed();
     
     public Vector2 Direction => inputActions.Player.Move.ReadValue<Vector2>();
     public Vector2 LookDirection => inputActions.Player.Look.ReadValue<Vector2>();

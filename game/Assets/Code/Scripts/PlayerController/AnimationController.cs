@@ -26,7 +26,7 @@ namespace AdvancedController {
 
         void Update() 
         {
-            _currentVelocity = Mathf.Lerp(_currentVelocity, controller.GetMovementVelocity().magnitude, Time.deltaTime * smoothing); //TODO: Add proper smoothing
+            _currentVelocity = Mathf.Lerp(_currentVelocity, controller.GetVelocity().magnitude, Time.deltaTime * smoothing); //TODO: Add proper smoothing
             animator.SetFloat(speedHash, _currentVelocity);
         }
         

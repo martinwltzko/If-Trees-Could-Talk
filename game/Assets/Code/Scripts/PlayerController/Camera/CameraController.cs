@@ -28,18 +28,18 @@ namespace AdvancedController {
             _currentYAngle = _tr.localRotation.eulerAngles.y;
         }
 
-        void Update() {
+        void FixedUpdate() {
             RotateCamera(Input.LookDirection.x, -Input.LookDirection.y);
         }
 
         void RotateCamera(float horizontalInput, float verticalInput) {
             if (smoothCameraRotation) {
-                horizontalInput = Mathf.Lerp(0, horizontalInput, Time.deltaTime * cameraSmoothingFactor);
-                verticalInput = Mathf.Lerp(0, verticalInput, Time.deltaTime * cameraSmoothingFactor);
+                horizontalInput = Mathf.Lerp(0, horizontalInput, Time.fixedDeltaTime * cameraSmoothingFactor);
+                verticalInput = Mathf.Lerp(0, verticalInput, Time.fixedDeltaTime * cameraSmoothingFactor);
             }
             
-            _currentXAngle += verticalInput * cameraSpeed * Time.deltaTime;
-            _currentYAngle += horizontalInput * cameraSpeed * Time.deltaTime;
+            _currentXAngle += verticalInput * cameraSpeed * Time.fixedDeltaTime;
+            _currentYAngle += horizontalInput * cameraSpeed * Time.fixedDeltaTime;
             
             _currentXAngle = Mathf.Clamp(_currentXAngle, -upperVerticalLimit, lowerVerticalLimit);
             
