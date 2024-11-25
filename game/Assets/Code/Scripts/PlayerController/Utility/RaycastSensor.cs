@@ -5,7 +5,7 @@ using UnityEngine;
 namespace AdvancedController {
     public class RaycastSensor {
         public float castLength = 1f;
-        public LayerMask layermask = 255;
+        public LayerMask layermask;
         
         Vector3 origin = Vector3.zero;
         Transform tr;
@@ -15,8 +15,9 @@ namespace AdvancedController {
         
         RaycastHit hitInfo;
 
-        public RaycastSensor(Transform playerTransform) {
+        public RaycastSensor(Transform playerTransform, LayerMask mask) {
             tr = playerTransform;
+            layermask = mask;
         }
 
         public void Cast() {

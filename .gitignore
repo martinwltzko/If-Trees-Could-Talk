@@ -1,2 +1,7 @@
 build/*
 */.idea/
+
+fmod/*/[Aa]ssets
+fmod/*/.cache
+fmod/*/.user
+fmod/*/Metadata

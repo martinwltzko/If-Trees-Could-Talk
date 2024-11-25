@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f40c4cd11127f490f84e36c851caba87, type: 3}
+  m_Name: Ambience
+  m_EditorClassIdentifier: 
+  sounds:
+  - soundId: Waterfall
+    soundEvent:
+      Guid:
+        Data1: 597058173
+        Data2: 1269124842
+        Data3: -1484756580
+        Data4: 1133903361
+      Path: event:/Ambience/Waterfall
+  - soundId: River
+    soundEvent:
+      Guid:
+        Data1: -1396570165
+        Data2: 1138057881
+        Data3: 1135156394
+        Data4: 244550288
+      Path: event:/Ambience/River
+  - soundId: Ambience
+    soundEvent:
+      Guid:
+        Data1: 1518318116
+        Data2: 1222646603
+        Data3: -1805805664
+        Data4: -718277617
+      Path: event:/Ambience/Ambience
+  - soundId: Music
+    soundEvent:
+      Guid:
+        Data1: -669879587
+        Data2: 1257845277
+        Data3: 323153081
+        Data4: 990254307
+      Path: event:/Music/TestMusic

@@ -11,6 +11,7 @@ namespace AdvancedController {
         [SerializeField] private float colliderHeight = 2f;
         [SerializeField] private float colliderThickness = 1f;
         [SerializeField] private Vector3 colliderOffset = Vector3.zero;
+        [SerializeField] private LayerMask collisionMask;
         
         private Rigidbody _rb;
         private Transform _tr;
@@ -101,7 +102,7 @@ namespace AdvancedController {
             var radius = _col.radius;
 
             var hit = Physics.CapsuleCastAll(bottom, top, radius, velocity.normalized,
-                    velocity.magnitude*Time.fixedDeltaTime, _sensor.layermask)
+                    velocity.magnitude*Time.fixedDeltaTime, collisionMask)
                 .FirstOrDefault(hit => hit.transform != null && hit.transform != transform);
             
             if (hit.transform == null) return velocity;
@@ -157,7 +158,7 @@ namespace AdvancedController {
         }
 
         private void RecalibrateSensor() {
-            _sensor ??= new RaycastSensor(_tr);
+            _sensor ??= new RaycastSensor(_tr, collisionMask);
             
             _sensor.SetCastOrigin(_col.bounds.center);
             _sensor.SetCastDirection(RaycastSensor.CastDirection.Down);

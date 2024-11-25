@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using FMODUnity;
 
 [CreateAssetMenu(menuName = "Sounds/SoundLibrary", fileName = "SoundLibrary")]
 public class SoundLibrary : ScriptableObject
@@ -14,7 +15,7 @@ public class SoundLibrary : ScriptableObject
 
         if(foundMap == null)
         {
-            Debug.LogError("No mathc found with sound id: " + soundId);
+            Debug.LogError("No match found with sound id: " + soundId);
         }
 
         return foundMap;
@@ -24,19 +25,6 @@ public class SoundLibrary : ScriptableObject
     public class SoundMap
     {
         public string soundId;
-        public List<AudioClip> soundAssets;
-
-        public AudioClip RandomAudioClip()
-        {
-            if(soundAssets.Count==0)
-            {
-                Debug.LogError("No sounds in soundLibrary: " + this);
-                return null;
-            }
-
-            int rnd = UnityEngine.Random.Range(0, soundAssets.Count);
-            return soundAssets[rnd];
-        }
-
+        public EventReference soundEvent;
     }
 }
