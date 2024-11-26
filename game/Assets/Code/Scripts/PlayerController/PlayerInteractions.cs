@@ -35,8 +35,17 @@ namespace AdvancedController
             Input.Primary += OnPrimary;
         }
         
-        public void OverrideOptionProvider(OptionProvider optionProvider)
+        public void OverrideOptionProvider(OptionProvider optionProvider, out OptionProvider previousOptionProvider)
         {
+            if (optionProvider == defaultOptionProvider) {
+                previousOptionProvider = null; //TODO: Not sure if this will cause problems further down the line
+                _currentOptionProvider = optionProvider;
+                Debug.Log("Possible error: Setting previous option provider to null");
+                _optionOverride = false;
+                return;
+            }
+            
+            previousOptionProvider = _currentOptionProvider;
             _currentOptionProvider = optionProvider;
             _optionOverride = true;
         }

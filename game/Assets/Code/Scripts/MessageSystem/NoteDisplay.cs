@@ -12,13 +12,15 @@ public class NoteDisplay : MonoBehaviour
     [SerializeField] private OptionProvider readNoteProvider;
     [SerializeField] private Note note;
     
+    private OptionProvider _previousOptionProvider;
+    
     public string NoteText => note.NoteText;
     
     public void WriteNote()
     {
         playerController.enabled = false;
         cameraController.enabled = false;
-        playerInteractions.OverrideOptionProvider(writeNoteProvider);
+        playerInteractions.OverrideOptionProvider(writeNoteProvider, out _previousOptionProvider);
         
         note.LoadCachedText();
         note.gameObject.SetActive(true);
@@ -28,7 +30,7 @@ public class NoteDisplay : MonoBehaviour
     {
         playerController.enabled = false;
         cameraController.enabled = false;
-        playerInteractions.OverrideOptionProvider(readNoteProvider);
+        playerInteractions.OverrideOptionProvider(_previousOptionProvider, out _);
         
         note.SetNoteText(message.message);
         note.gameObject.SetActive(true);

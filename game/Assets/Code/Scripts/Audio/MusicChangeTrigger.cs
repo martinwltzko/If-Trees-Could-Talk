@@ -10,7 +10,13 @@ namespace Code.Scripts.Audio
         [Button]
         private void Invoke()
         {
-            AudioManager.Instance.SetMusicArea(area);
+            AudioManager.Instance.SetMusicParameter("area", area);
+        }
+        
+        public enum MusicArea
+        {
+            TopArea=0,
+            BotArea=1,
         }
     }
 }

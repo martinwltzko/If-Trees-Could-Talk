@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Code.Scripts.Audio;
+using CustomExtensions;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
-using UnityEngine.UI.Extensions;
+using Sirenix.OdinInspector;
+
 
 public class AudioManager : MonoBehaviour
 {
@@ -51,7 +53,7 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         InitializeAmbientSound();
-        InitializeMusic();
+        //InitializeMusic();
     }
     
     private void Update()
@@ -78,15 +80,17 @@ public class AudioManager : MonoBehaviour
         _ambientEventInstance.setParameterByName(parameter, value);
     }
 
-    public void SetMusicArea(MusicArea area)
+    public void SetMusicParameter<T>(string parameter, T t) where T : Enum
     {
-        _musicEventInstance.setParameterByName("area", (float)area);
+        // Cast enum value to int, then convert to float
+        float parameterValue = Convert.ToSingle(Convert.ToInt32(t));
+        _musicEventInstance.setParameterByName(parameter, parameterValue);
     }
     
     
     private void InitializeMusic()
     {
-        _musicEventInstance = CreateInstance(_soundLibrary.Match("Music").soundEvent);
+        _musicEventInstance = CreateInstance(_soundLibrary.Match("VocalMusic").soundEvent);
         _musicEventInstance.start();
     }
     

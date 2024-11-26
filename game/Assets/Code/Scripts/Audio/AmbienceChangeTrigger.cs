@@ -8,7 +8,7 @@ namespace Code.Scripts.Audio
         [Header("Parameter Change")] [SerializeField]
         private string parameterName;
 
-        [SerializeField] private float parameterValue;
+        [SerializeField, Range(0,1f)] private float parameterValue;
 
         private void OnTriggerEnter(Collider other)
         {
