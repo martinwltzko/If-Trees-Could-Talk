@@ -1,31 +1,22 @@
 using System;
+using Unity.Collections;
 using UnityEngine;
 
 namespace AdvancedController.Utilities
 {
     public class MouseLock : MonoBehaviour
     {
-        public CursorLockMode lockMode = CursorLockMode.Locked;
-    
-        private void OnValidate()
+        [SerializeField, ReadOnly] private CursorLockMode currentLockMode;
+        
+        public void SetMouseLock(bool locked)
         {
-            Cursor.lockState = lockMode;
+            Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = !locked;
         }
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        private void Update()
         {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            if (Input.GetKey(KeyCode.Escape))
-            {
-                lockMode = Cursor.lockState==CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
-                Cursor.lockState = lockMode;
-            }
+            currentLockMode = Cursor.lockState;
         }
     }
 }

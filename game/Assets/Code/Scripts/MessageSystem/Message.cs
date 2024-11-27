@@ -7,63 +7,50 @@ using Interaction;
 using UnityEngine;
 using UnityUtils.Aiming;
 
-public class Message : MonoBehaviour, IAimingTarget, IInteractable
+public class Message : MonoBehaviour, IAimingTarget
 {
     [SerializeField] private Outlinable outlinable;
+    [SerializeField] private OptionProvider optionProvider;
     
     public string message;
-    private bool _aimingAt, _inRange;
     
     public Transform Transform => transform;
+    public OptionProvider OptionProvider => optionProvider;
+    private OptionProvider _previousOptionProvider;
 
 
-    public void OpenMessage(MonoBehaviour sender)
+    public void OpenMessage(object sender)
     {
-        if (sender is not PlayerInteractions playerInteractions) return;
+        if (sender is not PlayerInstance playerInstance)
+        {
+            Debug.LogError("Sender is not a player instance");
+            return;
+        }
 
-        Debug.Log("Message opened by " + sender);
-        playerInteractions.NoteDisplay.ReadNote(this);
+        Debug.Log("Message opened by " + playerInstance);
+        playerInstance.GetUIController().OpenNote(this);
     }
     
     private void Start()
     {
         outlinable.enabled = false;
     }
-
-    public void Interact(object sender)
-    {
-        PrintMessage();
-    }
     public void SetMessage(string newMessage)
     {
         message = newMessage;
     }
-    public void PrintMessage()
-    {
-        Debug.Log(message);
-    }
     
-    public void OnAimingStart()
+    public void OnAimingStart(object sender)
     {
-        _aimingAt = true;
-        outlinable.enabled = _aimingAt && _inRange;
+        if(sender is not PlayerInstance playerInstance) return;
+        playerInstance.PlayerInteractions.SetOptionProvider(optionProvider);
+        outlinable.enabled = true;
     }
 
-    public void OnAimingEnd()
+    public void OnAimingEnd(object sender)
     {
-        _aimingAt = false;
-        outlinable.enabled = _aimingAt && _inRange;
-    }
-
-    public void Focus(object sender)
-    {
-        _inRange = true;
-        outlinable.enabled = _aimingAt && _inRange;
-    }
-
-    public void Release(object sender)
-    {
-        _inRange = false;
-        outlinable.enabled = _aimingAt && _inRange;
+        if(sender is not PlayerInstance playerInstance) return;
+        playerInstance.PlayerInteractions.ClearCurrentOptionProvider();
+        outlinable.enabled = false;
     }
 }

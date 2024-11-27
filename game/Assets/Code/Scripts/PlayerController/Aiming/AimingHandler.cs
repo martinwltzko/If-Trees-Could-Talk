@@ -6,24 +6,29 @@ namespace AdvancedController
 {
     public class AimingHandler : MonoBehaviour
     {
-        [SerializeField] private Camera cam;
-        [SerializeField] private PlayerStats playerStats;
-        
-        private Transform _previousAimingTarget;
-            
+        [SerializeField] private PlayerInstance player;
+
+        private Transform PlayerTransform => player.PlayerController.transform;
+        private PlayerStats Stats => player.PlayerStats;
+        private Camera Cam => player.CameraController.Camera;
+
         public bool IsAiming { get; private set; } //TODO: Find a better name
-        public Transform AimingTarget { get; private set; }
         public Vector3 AimingPoint { get; private set; }
         public Vector3 AimingNormal { get; private set; }
+
+        private Transform _aimingTransform;
+        private IAimingTarget _aimingTarget;
+        private IAimingTarget _previousAimingTarget;
 
 
         private void FixedUpdate()
         {
-            Ray ray = cam.ScreenPointToRay(new Vector2(Screen.width / 2f, Screen.height / 2f));
+            Ray ray = Cam.ScreenPointToRay(new Vector2(Screen.width / 2f, Screen.height / 2f));
             IsAiming = Physics.Raycast(ray, out RaycastHit hit);
-            IsAiming = hit.distance <= playerStats.aimingDistance && hit.transform!=null;
+            IsAiming = Vector3.Distance(hit.point, PlayerTransform.position) <= Stats.aimingDistance && hit.transform!=null;
             
-            AimingTarget = IsAiming ? hit.transform : null;
+            _aimingTransform = IsAiming ? hit.transform : null;
+            _aimingTarget = _aimingTransform?.GetComponent<IAimingTarget>();
             AimingPoint = IsAiming ? hit.point : Vector3.zero;
             AimingNormal = IsAiming ? hit.normal : Vector3.zero;
             
@@ -32,21 +37,19 @@ namespace AdvancedController
 
         private void UpdateAimingTargets()
         {
-            if(IsAiming && _previousAimingTarget != AimingTarget)
+            if(IsAiming && _previousAimingTarget != _aimingTarget)
             {
-                if (_previousAimingTarget!=null && _previousAimingTarget.TryGetComponent(out IAimingTarget oldAimingTarget)) {
-                    oldAimingTarget.OnAimingEnd();
+                if (_previousAimingTarget!=null) {
+                    _previousAimingTarget.OnAimingEnd(player);
                 }
-                if (AimingTarget?.TryGetComponent(out IAimingTarget newAimingTarget) ?? false) {
-                    newAimingTarget.OnAimingStart();
+                if (_aimingTarget != null) {
+                    _aimingTarget.OnAimingStart(player);
                 }
-                _previousAimingTarget = AimingTarget;
+                _previousAimingTarget = _aimingTarget;
             }
             else if (!IsAiming && _previousAimingTarget != null)
             {
-                if (_previousAimingTarget.TryGetComponent(out IAimingTarget oldAimingTarget)) {
-                    oldAimingTarget.OnAimingEnd();
-                }
+                _previousAimingTarget.OnAimingEnd(player);
                 _previousAimingTarget = null;
             }
         }

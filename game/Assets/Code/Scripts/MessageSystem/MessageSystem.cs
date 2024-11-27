@@ -6,10 +6,6 @@ using UnityEngine;
 
 public class MessageSystem : MonoBehaviour
 {
-    [SerializeField] private Transform tree;
-    [SerializeField] private float height;
-    [SerializeField] private float radius;
-    
     [SerializeField] private int messageCount;
     [SerializeField] private Message messagePrefab;
     [SerializeField] private float messageOffset;
@@ -45,11 +41,5 @@ public class MessageSystem : MonoBehaviour
             messageInstance.SetMessage(message);
             _messages.Add(messageInstance);
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position, new Vector3(radius, height, radius));
     }
 }

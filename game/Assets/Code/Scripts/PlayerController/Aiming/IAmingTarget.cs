@@ -1,8 +1,13 @@
-﻿namespace UnityUtils.Aiming
+﻿using Code.Scripts.UI;
+using UnityEngine;
+
+namespace UnityUtils.Aiming
 {
     public interface IAimingTarget
     {
-        public void OnAimingStart();
-        public void OnAimingEnd();
+        //public OptionProvider OptionProvider { get; }
+        public Transform Transform { get; }
+        public void OnAimingStart(object sender);
+        public void OnAimingEnd(object sender);
     }
 }

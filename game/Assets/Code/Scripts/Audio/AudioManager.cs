@@ -5,13 +5,12 @@ using CustomExtensions;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
+using GameSystems.Common.Singletons;
 using Sirenix.OdinInspector;
 
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : RegulatorSingleton<AudioManager>
 {
-    public static AudioManager Instance { get; private set; }
-    
     [Header("Volume")]
     [Range(0,1)] public float masterVolume = 1;
     [Range(0,1)] public float musicVolume = 1;
@@ -32,15 +31,8 @@ public class AudioManager : MonoBehaviour
     private EventInstance _ambientEventInstance;
     private EventInstance _musicEventInstance;
     
-    private void Awake()
+    private void OnEnable()
     {
-        if (Instance == null)
-            Instance = this;
-        else {
-            Destroy(gameObject);
-            return;
-        }
-        
         _eventInstances.Clear();
         _emitters.Clear();
         

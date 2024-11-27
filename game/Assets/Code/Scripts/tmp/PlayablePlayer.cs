@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using AdvancedController;
 using Code.Scripts.UI;
 using EPOOutline;
+using EventHandling;
 using Interaction;
 using UnityEngine;
 using Sirenix.OdinInspector;
@@ -9,77 +11,72 @@ using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using UnityUtils.Aiming;
 
-public class PlayablePlayer : MonoBehaviour, IAimingTarget, IInteractable
+[RequireComponent(typeof(PlayableDirector))]
+public class PlayablePlayer : MonoBehaviour
 {
-    [SerializeField] private TimelineAsset timeline;
-    [SerializeField] private PlayableDirector director;
-    [SerializeField] private Outlinable outlinable;
-    [SerializeField] private PlayerInteractions playerInteractions; //TODO: Implement a robust way to handle this
-    [SerializeField] private OptionProvider optionProvider;
-    private OptionProvider _previousOptionProvider;
-
+    //TODO: Probably put this into a separate timelineSettings class with conditions
+    [Header("Timeline Settings")]
     [SerializeField] private float loopStart;
     [SerializeField] private float loopEnd;
-    public Transform Transform => transform;
+
+    [Header("Interaction..")]
+    [SerializeField] private PlayerInteractions playerInteractions; //TODO: Implement a robust way to handle this
+    private OptionProvider _previousOptionProvider;
+
+    private PlayableDirector _director;
+
+    private EventBinding<PlayerLoadedEvent> _playerLoadedEventBinding;
     
-    private bool _isAiming, _inRange;
-    public bool _cancelled;
-    public float _time;
+    
+    [Header("Debug")]
+    [SerializeField, ReadOnly] private bool _cancelled;
+    [SerializeField, ReadOnly] private float _time;
 
-    private void Start()
+    private void Awake()
     {
-        outlinable.enabled = false;
-    }
-
-    public void OnAimingStart()
-    {
-        _isAiming = true;
-        outlinable.enabled = _isAiming && _inRange;
-    }
-
-    public void OnAimingEnd()
-    {
-        _isAiming = false;
-        outlinable.enabled = _isAiming && _inRange;
-    }
-
-    public void Focus(object sender)
-    {
-        _inRange = true;
-        outlinable.enabled = _isAiming && _inRange;
-    }
-
-    public void Release(object sender)
-    {
-        _inRange = false;
-        outlinable.enabled = _isAiming && _inRange;
+        _director = GetComponent<PlayableDirector>();
+        _playerLoadedEventBinding = new EventBinding<PlayerLoadedEvent>((e) =>
+        {
+            if (e.Loaded) {
+                playerInteractions = e.PlayerInstance.PlayerInteractions;
+            }
+        });
+        EventBus<PlayerLoadedEvent>.Register(_playerLoadedEventBinding);
     }
     
-    public void Interact(object sender)
+    private void OnDestroy()
     {
-        PlayScene();
+        EventBus<PlayerLoadedEvent>.Unregister(_playerLoadedEventBinding);
+    }
+    
+    private void Update()
+    {
+        _time = (float)_director.time;
+        if (_time < loopStart || _cancelled) return;
+        if (_time > loopEnd) _director.time = loopStart;
+    }
+    
+    public void UpdateInteractionOptions(OptionProvider options)
+    {
+        playerInteractions.SetOptionProvider(options);
+    }
+
+    public void ClearInteractionOptions()
+    {
+        playerInteractions.ClearCurrentOptionProvider();
     }
     
     public void PlayScene()
     {
-        director.playableAsset = timeline;
-        director.Play();
+        _director.Play();
         _cancelled = false;
-        playerInteractions.OverrideOptionProvider(optionProvider, out _previousOptionProvider);
     }
-
-    //TODO: Implement a robust way to handle this
+    
     public void CancelScene()
     {
         _cancelled = true;
-        director.time = loopEnd;
-        playerInteractions.OverrideOptionProvider(_previousOptionProvider, out _);
+        _director.time = loopEnd;
     }
 
-    private void Update()
-    {
-        _time = (float)director.time;
-        if (_time < loopStart || _cancelled) return;
-        if (_time > loopEnd) director.time = loopStart;
-    }
+    
 }

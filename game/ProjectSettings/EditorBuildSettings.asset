@@ -6,7 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Bootstrapper.unity
+    guid: b438cd17256d53a49a9cbdbd869cd42c
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 8e38833ea0b6d7444a785c84dc3d480a
+  - enabled: 1
     path: Assets/Scenes/HouseOnHill/HouseOnHill.unity
     guid: 42cafee814b11ea4b8eb3bf2a93cc030
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/Scenes/HouseOnHill/GameUI.unity
+    guid: e5d1ebd5a9436974dbfa10f9190bfa47
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 00f05a1acee08a3449e16e76c5dc5156,
+      type: 3}
   m_UseUCBPForAssetBundles: 0

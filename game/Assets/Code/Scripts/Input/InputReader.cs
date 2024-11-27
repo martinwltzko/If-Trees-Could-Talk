@@ -8,7 +8,7 @@ public interface IInputReader {
     void EnablePlayerActions();
 }
 
-[CreateAssetMenu(fileName = "InputReader", menuName = "InputReader")]
+[CreateAssetMenu(fileName = "PlayerInputReader", menuName = "Input/PlayerInput")]
 public class InputReader : ScriptableObject, IPlayerActions, IInputReader {
     public event UnityAction<Vector2> Move = delegate { };
     public event UnityAction<Vector2, bool> Look = delegate { };

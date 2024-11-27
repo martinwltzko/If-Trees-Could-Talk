@@ -1,31 +1,36 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityUtils;
 
 namespace AdvancedController {
+    
+    [RequireComponent(typeof(CinemachineCamera))]
     public class CameraController : MonoBehaviour {
-        #region Fields
+        
+        [SerializeField] private PlayerInstance player;
+        [SerializeField] private CinemachineCamera cinemachineCamera;
+        [SerializeField] private new Camera camera;
+        [SerializeField] private Transform camAnchor;
+
+        [SerializeField, Range(0f, 90f)] private float upperVerticalLimit = 35f;
+        [SerializeField, Range(0f, 90f)] private float lowerVerticalLimit = 35f;
+        [SerializeField, Range(1f, 50f)] private float cameraSmoothingFactor = 25f;
+
+        [SerializeField] private float cameraSpeed = 50f;
+        [SerializeField] private bool smoothCameraRotation;
+
+        private InputReader Input => player.InputReader;
+        public Camera Camera => camera;
+        public CinemachineCamera CinemachineCamera => cinemachineCamera;
+        public Vector3 GetUpDirection() => camAnchor.up;
+        public Vector3 GetFacingDirection () => camAnchor.forward;
+        
         private float _currentXAngle;
         private float _currentYAngle;
-        private Transform _tr;
-        
-        [Range(0f, 90f)] public float upperVerticalLimit = 35f;
-        [Range(0f, 90f)] public float lowerVerticalLimit = 35f;
-        
-        public float cameraSpeed = 50f;
-        public bool smoothCameraRotation;
-        [Range(1f, 50f)] public float cameraSmoothingFactor = 25f;
-        [SerializeField] InputProvider inputProvider;
-        private InputReader Input => inputProvider.Input;
-        #endregion
-        
-        public Vector3 GetUpDirection() => _tr.up;
-        public Vector3 GetFacingDirection () => _tr.forward;
 
         void Awake() {
-            _tr = transform;
-            
-            _currentXAngle = _tr.localRotation.eulerAngles.x;
-            _currentYAngle = _tr.localRotation.eulerAngles.y;
+            _currentXAngle = camAnchor.localRotation.eulerAngles.x;
+            _currentYAngle = camAnchor.localRotation.eulerAngles.y;
         }
 
         void FixedUpdate() {
@@ -43,7 +48,7 @@ namespace AdvancedController {
             
             _currentXAngle = Mathf.Clamp(_currentXAngle, -upperVerticalLimit, lowerVerticalLimit);
             
-            _tr.localRotation = Quaternion.Euler(_currentXAngle, _currentYAngle, 0);
+            camAnchor.localRotation = Quaternion.Euler(_currentXAngle, _currentYAngle, 0);
         }
     }
 }
