@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using FMODUnity;
 
-[CreateAssetMenu(menuName = "Sounds/SoundLibrary", fileName = "SoundLibrary")]
+[CreateAssetMenu(menuName = "AudioLibrary/SoundLibrary", fileName = "SoundLibrary")]
 public class SoundLibrary : ScriptableObject
 {
     public List<SoundMap> sounds;

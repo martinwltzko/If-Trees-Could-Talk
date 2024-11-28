@@ -1,5 +1,6 @@
 using System;
 using AdvancedController;
+using Code.Scripts.UI;
 using UnityEngine;
 
 public class MessagePoster : MonoBehaviour
@@ -14,35 +15,24 @@ public class MessagePoster : MonoBehaviour
     private bool _messageCreated;
     private bool _messagePosted;
     
-    private InputReader Input => player.InputReader;
     private AimingHandler AimingHandler => player.AimingHandler;
     private PlayerInteractions PlayerInteractions => player.PlayerInteractions;
-    //private NoteDisplay NoteDisplay => player.UIController.NoteDisplay;
+    private UIController UIController => player.GetUIController();
     
-    private void Start()
-    {
-        Input.Primary += OnPrimary;
-    }
-
-    private void OnPrimary(bool down)
-    {
-        if (!down) return;
-        if (!AimingHandler.IsAiming) return;
-        if(_messageCreated) PostMessage();
-    }
+    [SerializeField] private OptionProvider postMessageOptionProvider;
+    [SerializeField] private OptionProvider stashMessageOptionProvider;
+    
 
     public void CreateMessage()
     {
-        var noteDisplay = player.GetUIController().NoteDisplay;
+        var noteDisplay = UIController.NoteDisplay;
         if (noteDisplay.NoteText.Trim() == string.Empty)
         {
             Debug.Log("No message to post");
             return;
         }
         
-        _messageCreated = true;
-        PlayerInteractions.enabled = false;
-        
+        _messageCreated = true; 
         _message = Instantiate(messagePrefab);
         _message.GetComponent<Collider>().enabled = false;
         _message.SetMessage(noteDisplay.NoteText);
@@ -54,10 +44,22 @@ public class MessagePoster : MonoBehaviour
         if(!_messageCreated) return;
         
         WebHandler.Instance.GenerateMessage(_message.message, _message.transform.position, _message.transform.forward);
+        SaveSystem.SaveFloat(SaveSystem.SaveVariable.MessageAmount, SaveSystem.GetFloat(SaveSystem.SaveVariable.MessageAmount)+1);
         
         PlayerInteractions.enabled = true;
         _messageCreated = false;
         _message.GetComponent<Collider>().enabled = true;
+        UIController.SetOptionProvider(null);
+    }
+    
+    public void StashMessage()
+    {
+        if(!_messageCreated) return;
+        
+        UIController.NoteDisplay.Note.SetNoteText(_message.message);
+        UIController.SetOptionProvider(null);
+        _messageCreated = false;
+        Destroy(_message.gameObject);
     }
 
     // Update is called once per frame
@@ -65,6 +67,11 @@ public class MessagePoster : MonoBehaviour
     {
         if(_messageCreated)
         {
+            //Note: SetOptionsProvider returns early if optionProvider didn't change, so it's safe to call it every frame
+            UIController.SetOptionProvider(!AimingHandler.IsAiming
+                ? stashMessageOptionProvider
+                : postMessageOptionProvider);
+
             var position = AimingHandler.AimingPoint;
             var normal = AimingHandler.AimingNormal;
             

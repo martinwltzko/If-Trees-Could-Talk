@@ -3,7 +3,7 @@ using Code.Scripts.UI;
 using TMPro;
 using UnityEngine;
 
-public class Note : MonoBehaviour
+public class Note : MonoBehaviour, IMouseOverIgnores
 {
     [SerializeField] private TMP_InputField inputField;
     private string _cachedText = string.Empty;

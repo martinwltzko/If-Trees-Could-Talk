@@ -33,19 +33,17 @@ public class AudioManager : RegulatorSingleton<AudioManager>
     
     private void OnEnable()
     {
-        _eventInstances.Clear();
-        _emitters.Clear();
+        CleanUp();
         
         _masterBus = RuntimeManager.GetBus("bus:/");
         _musicBus = RuntimeManager.GetBus("bus:/Music");
         _sfxBus = RuntimeManager.GetBus("bus:/SFX");
         _ambienceBus = RuntimeManager.GetBus("bus:/Ambience");
     }
-
-    private void Start()
+    
+    private void OnDestroy()
     {
-        InitializeAmbientSound();
-        //InitializeMusic();
+        CleanUp();
     }
     
     private void Update()
@@ -55,13 +53,8 @@ public class AudioManager : RegulatorSingleton<AudioManager>
         _sfxBus.setVolume(sfxVolume);
         _ambienceBus.setVolume(ambienceVolume);
     }
-
-    private void OnDestroy()
-    {
-        CleanUp();
-    }
     
-    private void InitializeAmbientSound()
+    public void InitializeAmbientSound()
     {
         _ambientEventInstance = CreateInstance(_soundLibrary.Match("Ambience").soundEvent);
         _ambientEventInstance.start();

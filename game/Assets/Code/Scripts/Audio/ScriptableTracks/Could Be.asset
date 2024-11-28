@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a98c91fff174e04981e947b53a443fb, type: 3}
   m_Name: Could Be
   m_EditorClassIdentifier: 
-  track: 1
+  vocalTrack: 1

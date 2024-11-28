@@ -24,6 +24,7 @@ namespace Code.Scripts.Input
         public event UnityAction<bool> Secondary = delegate { };
         
         public Vector2 MouseDelta => InputActions.UI.Look.ReadValue<Vector2>();
+        public Vector2 MousePosition => InputActions.UI.Point.ReadValue<Vector2>();
 
         public void EnablePlayerActions() {
             if (InputActions == null) {

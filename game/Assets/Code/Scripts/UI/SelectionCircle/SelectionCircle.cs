@@ -21,7 +21,8 @@ public class SelectionCircle : MonoBehaviour
     [SerializeField] private float optionRadius = 100f;
     [SerializeField] private Transform optionsContainer;
     [SerializeField] private OptionText optionPrefab;
-    
+
+    private Vector2 _initialPosition;
     private Vector2 _mouseDelta;
     private bool _pressed;
 
@@ -34,6 +35,7 @@ public class SelectionCircle : MonoBehaviour
     private void Start()
     {
         _rt = GetComponent<RectTransform>();
+        _initialPosition = _rt.position;
     }
 
     public void SetOptions(OptionProvider optionProvider)
@@ -46,6 +48,8 @@ public class SelectionCircle : MonoBehaviour
 
     public void UpdateSelection(Vector2 mouseDelta)
     {
+        if (!_pressed) return;
+        
         _mouseDelta += mouseDelta * sensitivity;
         _mouseDelta = Vector2.ClampMagnitude(_mouseDelta, clampDistance);
         
@@ -53,7 +57,7 @@ public class SelectionCircle : MonoBehaviour
         CheckSelection();
     }
 
-    public void OnPrimary(bool down, out OptionProvider.Option selectedOption)
+    public void OnPrimary(bool down, Vector2 position, out OptionProvider.Option selectedOption)
     {
         selectedOption = null;
         
@@ -61,6 +65,7 @@ public class SelectionCircle : MonoBehaviour
         {
             _pressed = true;
             _mouseDelta = Vector2.zero;
+            _rt.position = position;
             
             _rt.DOSizeDelta(new Vector2(activeScaling, activeScaling), activationSmoothness);
             foreach (var option in _optionsMapping) {
@@ -70,9 +75,10 @@ public class SelectionCircle : MonoBehaviour
         if (!down && _pressed) {
             _pressed = false;
             cursor.anchoredPosition = Vector2.zero;
+            _rt.position = _initialPosition;
             
             if (_selectedOption!=null && _optionsMapping.TryGetValue(_selectedOption, out var selectedOptionTransform)) {
-                selectedOptionTransform.GetComponent<TextMeshProUGUI>().color = Color.gray;
+                selectedOptionTransform.SetColor(Color.gray); 
                 selectedOption = _selectedOption;
             }
 

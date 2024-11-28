@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using AdvancedController;
 using AdvancedController.Utilities;
 using Code.Scripts.Input;
 using Code.Scripts.UI;
@@ -9,43 +11,51 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityUtils.StateMachine;
 
+//TODO: Separate this class into a gameUI and main menu controller, also scan for all
+// states in hierarchy automatically and add them to the state machine
 public class UIController : MonoBehaviour
 {
     [FormerlySerializedAs("uiInputReader")]
     [Header("General")] 
     [SerializeField] private UIInputReader inputReader;
+    [SerializeField] private UIRaycaster uiRaycaster;
     [SerializeField] private MouseLock mouseLock;
     [SerializeField] private bool isMainMenu;
-    [SerializeField] private GameObject ingameUIContainer;
-    [SerializeField] private GameObject mainMenuContainer;
-    [SerializeField] private GameObject pauseMenuContainer;
-    
-    [Header("UI Elements")]
-    [SerializeField] private NoteDisplay noteDisplay;
-    [SerializeField] private SelectionCircle selectionCircle;
-    public SelectionCircle SelectionCircle => selectionCircle;
-    public NoteDisplay NoteDisplay => noteDisplay;
-    
-    [Header("UI States")] 
-    [SerializeField] private MainMenuState mainMenuState;
 
-    [SerializeField] private PauseMenuState pauseMenuState;
+    [Header("UI Containers")]
+    [SerializeField, HideIf("isMainMenu")] private GameObject ingameUIContainer;
+    [SerializeField, HideIf("isMainMenu")] private GameObject pauseMenuContainer;
+    [SerializeField, ShowIf("isMainMenu")] private GameObject mainMenuContainer;
+
+    [Header("UI Elements")]
+    [SerializeField, HideIf("isMainMenu")] private NoteDisplay noteDisplay;
+    [SerializeField, HideIf("isMainMenu")] private SelectionCircle selectionCircle;
+
+    [Header("UI States")] 
+    [SerializeField, ShowIf("isMainMenu")] private MainMenuState mainMenuState;
+    [SerializeField, HideIf("isMainMenu")] private PauseMenuState pauseMenuState;
+    [SerializeField, HideIf("isMainMenu")] private InGameUIState inGameUIState;
+    [SerializeField, HideIf("isMainMenu")] private NoteEditingState noteEditingState;
+    [SerializeField, ShowIf("isMainMenu")] private CreditsState creditsState;
     [SerializeField] private OptionsMenuState optionsMenuState;
-    [SerializeField] private InGameUIState inGameUIState;
     [SerializeField] private AudioSettingsState audioSettingsState;
     [SerializeField] private VideoSettingsState videoSettingsState;
     [SerializeField] private GameSettingsState gameSettingsState;
-    [SerializeField] private NoteEditingState noteEditingState;
-    [SerializeField] private CreditsState creditsState;
+    [SerializeField] private ApplyVideoSettingsState applyVideoSettingsState;
     
     [Header("Debug")]
     [SerializeField, ReadOnly] private BehaviourState currentState;
     [SerializeField, ReadOnly] private PlayerInstance player;
     
+    private CameraController CameraController => player?.CameraController;
+    public SelectionCircle SelectionCircle => selectionCircle;
+    public NoteDisplay NoteDisplay => noteDisplay;
+
     private StateMachine _stateMachine;
+    
     private bool _cancelPressedThisFrame;
-    private bool _primaryDown;
     private bool _openNote;
+    private bool _editingNote;
     
     public Action<OptionProvider.Option> OnOptionPressed = delegate { };
 
@@ -53,6 +63,7 @@ public class UIController : MonoBehaviour
     {
         inputReader.Cancel += OnCancel;
         inputReader.Primary += OnClicking;
+        inputReader.Secondary += OnCancel;
     }
 
     private void Start()
@@ -77,9 +88,10 @@ public class UIController : MonoBehaviour
 
     private void Update()
     {
+        //RaycastMousePoint(out _mouseOverIgnores);
         _stateMachine.Update();
         if (_cancelPressedThisFrame) _cancelPressedThisFrame = false;
-        if (_primaryDown && selectionCircle) selectionCircle.UpdateSelection(inputReader.MouseDelta);
+        if (selectionCircle) selectionCircle.UpdateSelection(inputReader.MouseDelta); 
     }
 
     private void FixedUpdate() => _stateMachine.FixedUpdate();
@@ -96,6 +108,8 @@ public class UIController : MonoBehaviour
         videoSettingsState?.Initialize(this);
         gameSettingsState?.Initialize(this);
         noteEditingState?.Initialize(this);
+        creditsState?.Initialize(this);
+        applyVideoSettingsState?.Initialize(this);
         
         At(inGameUIState, pauseMenuState, () => _cancelPressedThisFrame);
         At(audioSettingsState, optionsMenuState, () => _cancelPressedThisFrame);
@@ -105,6 +119,8 @@ public class UIController : MonoBehaviour
         At(optionsMenuState, mainMenuState, () => _cancelPressedThisFrame && isMainMenu);
         At(optionsMenuState, pauseMenuState, () => _cancelPressedThisFrame && !isMainMenu);
         At(pauseMenuState, inGameUIState, () => _cancelPressedThisFrame);
+        
+        At(applyVideoSettingsState, videoSettingsState, () => _cancelPressedThisFrame);
 
         Any(noteEditingState, () => _openNote);
         At(noteEditingState, inGameUIState, () => _cancelPressedThisFrame);
@@ -125,6 +141,12 @@ public class UIController : MonoBehaviour
         if(to==null) return;
         _stateMachine.AddAnyTransition(to, condition);
     }
+    
+    public void ChangeState(BehaviourState state)
+    {
+        currentState = state;
+        _stateMachine.ChangeState(state);
+    }
 
     private void OnCancel(bool isPressed)
     {
@@ -135,21 +157,14 @@ public class UIController : MonoBehaviour
     private void OnClicking(bool isPressed)
     {
         Debug.Log("Click pressed: " + isPressed);
-        _primaryDown = isPressed;
         if(selectionCircle == null) return;
-        selectionCircle.OnPrimary(isPressed, out var option);
+        if (uiRaycaster.IsPointOver<IMouseOverIgnores>(inputReader.MousePosition)) return;
+        if(_editingNote) mouseLock.SetMouseLock(CursorLockMode.Confined, !isPressed);
+        
+        CameraController.enabled = !isPressed;
+        selectionCircle.OnPrimary(isPressed, inputReader.MousePosition, out var option);
         if (option != null) OnOptionPressed(option);
-    }
 
-    public void LoadSceneGroup(int index)
-    {
-        Bootstrapper.Instance.LoadSceneGroup(index);
-    }
-    
-    public void ChangeState(BehaviourState state)
-    {
-        currentState = state;
-        _stateMachine.ChangeState(state);
     }
     
     public void OnPauseMenuEnter()
@@ -158,7 +173,7 @@ public class UIController : MonoBehaviour
         if(mainMenuContainer) mainMenuContainer.SetActive(false);
         if(pauseMenuContainer) pauseMenuContainer.SetActive(true);
         
-        mouseLock.SetMouseLock(false);
+        mouseLock.SetMouseLock(CursorLockMode.None, true);
         player?.InputReader.DisablePlayerActions();
     }
     
@@ -168,7 +183,7 @@ public class UIController : MonoBehaviour
         if(mainMenuContainer) mainMenuContainer.SetActive(true);
         if(pauseMenuContainer) pauseMenuContainer.SetActive(false);
         
-        mouseLock.SetMouseLock(false);
+        mouseLock.SetMouseLock(CursorLockMode.None, true);
         player?.InputReader.DisablePlayerActions();
     }
     
@@ -178,7 +193,7 @@ public class UIController : MonoBehaviour
         if(mainMenuContainer) mainMenuContainer.SetActive(false);
         if(pauseMenuContainer) pauseMenuContainer.SetActive(false);
         
-        mouseLock.SetMouseLock(true);
+        mouseLock.SetMouseLock(CursorLockMode.Locked, false);
         player?.InputReader.EnablePlayerActions();
     }
     
@@ -214,14 +229,28 @@ public class UIController : MonoBehaviour
     public void OnNoteEditing(bool entering)
     {
         if(entering) {
-            //PlayerInput.DisablePlayerActions();
-            mouseLock.SetMouseLock(false);
+            player.InputReader.DisablePlayerActions();
+            mouseLock.SetMouseLock(CursorLockMode.Confined, true);
+            CameraController.enabled = false;
+            _editingNote = true;
         }
         else {
-            //PlayerInput.EnablePlayerActions();
+            player.InputReader.EnablePlayerActions();
             player.PlayerInteractions.ClearCurrentOptionProvider();
             noteDisplay.Note.gameObject.SetActive(false);
-            mouseLock.SetMouseLock(true);
+            mouseLock.SetMouseLock(CursorLockMode.Locked, false);
+            CameraController.enabled = true;
+            _editingNote = false;
         }
+    }
+    
+    public void LoadSceneGroup(int index)
+    {
+        Bootstrapper.Instance.LoadSceneGroup(index);
+    }
+    
+    public void QuitGame()
+    {
+        Bootstrapper.Instance.QuitGame();
     }
 }

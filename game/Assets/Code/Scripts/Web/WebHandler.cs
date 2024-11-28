@@ -4,30 +4,19 @@ using System.Globalization;
 using System.Text;
 using Code.Scripts.MessageSystem;
 using Cysharp.Threading.Tasks;
+using GameSystems.Common.Singletons;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine;
 
-public class WebHandler : MonoBehaviour
+public class WebHandler : RegulatorSingleton<WebHandler>
 {
-    public static WebHandler Instance { get; private set; }
-    
     [SerializeField] private string uri = "http://127.0.0.1:8000"; // TODO: Change this to your server's IP
     [SerializeField, EnableIf("offlineMode")] private string token;
     [SerializeField, ReadOnly, HideIf("offlineMode")] private string playerId;
     [SerializeField] private bool offlineMode;
-    
-    private void Awake()
-    {
-        if (Instance == null) {
-            Instance = this;
-        }
-        else {
-            Destroy(gameObject);
-        }
-    }
     
     private async void Start()
     {

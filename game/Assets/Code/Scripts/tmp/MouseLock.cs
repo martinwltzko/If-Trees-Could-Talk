@@ -8,10 +8,10 @@ namespace AdvancedController.Utilities
     {
         [SerializeField, ReadOnly] private CursorLockMode currentLockMode;
         
-        public void SetMouseLock(bool locked)
+        public void SetMouseLock(CursorLockMode lockMode, bool visible)
         {
-            Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !locked;
+            Cursor.lockState = lockMode;
+            Cursor.visible = visible;
         }
 
         private void Update()

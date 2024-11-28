@@ -19,5 +19,6 @@ namespace AdvancedController
         public bool useLocalMomentum;
         
         public float aimingDistance = 10f;
+        public LayerMask aimingLayerMask;
     }
 }

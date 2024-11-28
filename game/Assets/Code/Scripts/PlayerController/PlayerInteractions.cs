@@ -31,23 +31,14 @@ namespace AdvancedController
         private bool _cameraEnabled;
         
 
-        private void OnEnable()
-        {
-            player.InputReader.Primary += OnPrimary;
+        private void OnEnable() {
             player.OnUiLoaded += OnUiLoaded;
         }
 
-        private void OnDisable()
-        {
-            player.InputReader.Primary -= OnPrimary;
+        private void OnDisable() {
             player.OnUiLoaded -= OnUiLoaded;
         }
         
-        private void OnPrimary(bool down)
-        {
-            if (!enabled) return;
-            HandleCameraActivation(down);
-        }
         
         private void OnOptionPressed([NotNull] OptionProvider.Option option) {
             Debug.Log("Option pressed: " + option);
@@ -80,24 +71,10 @@ namespace AdvancedController
             selectionCircle.SetOptions(_currentOptionProvider);
         }
         
-        
-        
         private bool TryGetSelectionCircle(out SelectionCircle selectionCircle)
         {
             selectionCircle = _uiController?.SelectionCircle;
             return selectionCircle != null;
-        }
-        
-        //TODO: Implement this in a separate class, single responsibility principle
-        private void HandleCameraActivation(bool down)
-        {
-            if (down) {
-                _cameraEnabled = CameraController.enabled;
-                CameraController.enabled = false;
-            }
-
-            if(!down && _primaryDown) CameraController.enabled = _cameraEnabled;
-            _primaryDown = down;
         }
 
         private void OnDrawGizmos()

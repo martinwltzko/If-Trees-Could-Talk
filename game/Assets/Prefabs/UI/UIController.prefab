@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2285688044204188166
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7571117980995664059}
+  - component: {fileID: 7898199523510509817}
+  - component: {fileID: 4428855146912290623}
+  - component: {fileID: 872349711466437410}
+  m_Layer: 0
+  m_Name: UIController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7571117980995664059
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2285688044204188166}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1174.274, y: 496.35788, z: -4.939993}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7898199523510509817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2285688044204188166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cebc8fa3ae484850bf7c3c0ac4407225, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputReader: {fileID: 11400000, guid: c6263b57227ae6a428d863a676d1a237, type: 2}
+  uiRaycaster: {fileID: 4428855146912290623}
+  mouseLock: {fileID: 872349711466437410}
+  isMainMenu: 1
+  ingameUIContainer: {fileID: 0}
+  pauseMenuContainer: {fileID: 0}
+  mainMenuContainer: {fileID: 0}
+  noteDisplay: {fileID: 0}
+  selectionCircle: {fileID: 0}
+  mainMenuState: {fileID: 0}
+  pauseMenuState: {fileID: 0}
+  inGameUIState: {fileID: 0}
+  noteEditingState: {fileID: 0}
+  creditsState: {fileID: 0}
+  optionsMenuState: {fileID: 0}
+  audioSettingsState: {fileID: 0}
+  videoSettingsState: {fileID: 0}
+  gameSettingsState: {fileID: 0}
+  applyVideoSettingsState: {fileID: 0}
+  currentState: {fileID: 0}
+  player: {fileID: 0}
+--- !u!114 &4428855146912290623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2285688044204188166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e173f331d3db4e949a8b3e11c7b81a6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastResultsCount: 0
+--- !u!114 &872349711466437410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2285688044204188166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1174a2c6d71495044863f165384dbce5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentLockMode: 0

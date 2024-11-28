@@ -31,12 +31,12 @@ public class PlayerInstance : MonoBehaviour
     {
         _uiLoadedEventBinding = new EventBinding<UILoadedEvent>(UILoadedCallback);
         EventBus<UILoadedEvent>.Register(_uiLoadedEventBinding);
-        EventBus<PlayerLoadedEvent>.Ping(new PlayerLoadedEvent(this, true));
+        EventBus<PlayerLoadedEvent>.Repeat(new PlayerLoadedEvent(this, true));
     }
 
     private void OnDisable()
     {
-        EventBus<PlayerLoadedEvent>.Ping(new PlayerLoadedEvent(this, false));
+        EventBus<PlayerLoadedEvent>.Repeat(new PlayerLoadedEvent(this, false));
     }
     
     private void Start() 
@@ -75,5 +75,10 @@ public class PlayerInstance : MonoBehaviour
         AimingHandler.gameObject.SetActive(true);
         CameraController.CinemachineCamera.Prioritize();
         PlayerInteractions.ClearCurrentOptionProvider();
+    }
+
+    public void TryOpenNote() {
+        if(uiController==null) Debug.LogError("UIController is null. Cant open note!");
+        uiController?.OpenNote();
     }
 }

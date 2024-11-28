@@ -39,6 +39,25 @@ namespace EventHandling
             if(timeOutInMs <= 0)
                 Debug.LogWarning($"EventBus<{typeof(T).Name}>: Ping timed out.");
         }
+        
+        public static async void Repeat(T @event, float intervalInMs=250, int repeatCount=10)
+        {
+            HashSet<IEventBinding<T>> calledBindings = new();
+            while(repeatCount > 0)
+            {
+                if (bindings.Count > 0) {
+                    foreach (var binding in bindings) {
+                        if (!calledBindings.Add(binding)) continue;
+                        
+                        // Call new events
+                        binding.OnEvent.Invoke(@event);
+                        binding.OnEventNoArgs.Invoke();
+                    }
+                }
+                await Task.Delay((int)intervalInMs);
+                repeatCount--;
+            }
+        }
 
         static void Clear()
         {

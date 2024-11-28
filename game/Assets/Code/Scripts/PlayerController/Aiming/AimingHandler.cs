@@ -24,7 +24,7 @@ namespace AdvancedController
         private void FixedUpdate()
         {
             Ray ray = Cam.ScreenPointToRay(new Vector2(Screen.width / 2f, Screen.height / 2f));
-            IsAiming = Physics.Raycast(ray, out RaycastHit hit);
+            IsAiming = Physics.Raycast(ray, out RaycastHit hit, Stats.aimingDistance, Stats.aimingLayerMask);
             IsAiming = Vector3.Distance(hit.point, PlayerTransform.position) <= Stats.aimingDistance && hit.transform!=null;
             
             _aimingTransform = IsAiming ? hit.transform : null;

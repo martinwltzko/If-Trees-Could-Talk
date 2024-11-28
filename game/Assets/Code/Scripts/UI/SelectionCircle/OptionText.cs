@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Code.Scripts.UI
 {
-    [RequireComponent(typeof(RectTransform), typeof(TextMeshProUGUI))]
+    [RequireComponent(typeof(RectTransform))]
     public class OptionText : MonoBehaviour
     {
         [SerializeField] private RectTransform rt;
@@ -17,6 +17,10 @@ namespace Code.Scripts.UI
             SetText(text);
             SetPosition(localPosition);
             SetColor(color);
+            
+            var width = label.preferredWidth;
+            var height = label.preferredHeight;
+            rt.sizeDelta = new Vector2(width, height);
         }
 
         public void SetText(string text) => label.SetText(text);

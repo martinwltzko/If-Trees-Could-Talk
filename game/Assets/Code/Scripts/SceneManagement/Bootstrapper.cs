@@ -27,4 +27,14 @@ public class Bootstrapper : PersistentSingleton<Bootstrapper> {
     public void LoadSceneGroup(int index) {
         _sceneLoader.LoadSceneGroup(index);
     }
+    
+    public void QuitGame() {
+        #if UNITY_EDITOR
+        if(EditorApplication.isPlaying) {
+            EditorApplication.isPlaying = false;
+            return;
+        }
+        #endif
+        Application.Quit();
+    }
 }
