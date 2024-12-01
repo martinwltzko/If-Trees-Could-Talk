@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4588201261817197416}
   - component: {fileID: 5156822640657287040}
   - component: {fileID: 8746977868371929584}
+  - component: {fileID: 6804569785965664075}
   m_Layer: 5
   m_Name: Cursor
   m_TagString: Untagged
@@ -35,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 1.5100708, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5156822640657287040
 CanvasRenderer:
@@ -75,6 +76,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6804569785965664075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3890642423382644145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfec5df6af70a5f4b851580e4d4f92b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 8746977868371929584}
+  sprites:
+  - {fileID: -272379254, guid: 8c4ded4b85508d24e9a72c11ead7153b, type: 3}
+  - {fileID: 1860208210, guid: 8c4ded4b85508d24e9a72c11ead7153b, type: 3}
+  - {fileID: 325254378, guid: 8c4ded4b85508d24e9a72c11ead7153b, type: 3}
+  - {fileID: -176181669, guid: 8c4ded4b85508d24e9a72c11ead7153b, type: 3}
+  animationSpeed: 0.1
+  playOnAwake: 1
 --- !u!1 &6658372732258270067
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,7 +129,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 1.5100708, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8314033825481423474
 GameObject:
@@ -136,7 +157,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8314033825481423474}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -203,14 +224,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b3828922e3cd374dba1ca1441c2a3c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  circle: {fileID: 2445550314583565915}
   idleScaling: 10
   activeScaling: 100
   activationSmoothness: 0.3
-  sensitivity: 0.75
+  sensitivity: 0.789
   cursor: {fileID: 4588201261817197416}
-  clampDistance: 90
-  selectionThreshold: 20
-  optionRadius: 120
+  clampDistance: 80
+  selectionThreshold: 40
+  optionRadius: 100
   optionsContainer: {fileID: 1580883049992358693}
   optionPrefab: {fileID: -7133350933388611686, guid: 18fe85f59f0300840bcfd9850cee28b2,
     type: 3}

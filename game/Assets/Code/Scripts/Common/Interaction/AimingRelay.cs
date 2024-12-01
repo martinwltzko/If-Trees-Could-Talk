@@ -14,11 +14,13 @@ namespace Interaction
 
         public void OnAimingStart(object sender)
         {
+            if(!enabled) return;
             onAimingStart.Invoke();
         }
 
         public void OnAimingEnd(object sender)
         {
+            if(!enabled) return;
             onAimingEnd.Invoke();
         }
     }

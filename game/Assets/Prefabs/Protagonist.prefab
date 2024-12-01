@@ -142,8 +142,11 @@ MonoBehaviour:
   upperVerticalLimit: 70
   lowerVerticalLimit: 70
   cameraSmoothingFactor: 25
-  cameraSpeed: 20
+  minCameraSpeed: 10
+  maxCameraSpeed: 100
   smoothCameraRotation: 1
+  dampingFactor: 0.2
+  oldRotation: 1
 --- !u!1 &1507219047953102823
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,9 +196,9 @@ MonoBehaviour:
     Interact:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UIController, Assembly-CSharp
-          m_MethodName: OpenNote
+        - m_Target: {fileID: 3294577741718514128}
+          m_TargetAssemblyTypeName: PlayerInstance, Assembly-CSharp
+          m_MethodName: TryOpenNote
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -221,10 +224,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - OptionName: Take Picture
-    Interact:
-      m_PersistentCalls:
-        m_Calls: []
 --- !u!1 &3576529547297405585
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,7 +310,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.22
+  m_Radius: 0.35
   m_Height: 1.3212601
   m_Direction: 1
   m_Center: {x: 0, y: 1.0986552, z: 0}
@@ -329,13 +328,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stepHeightRatio: 0.278
   colliderHeight: 1.83
-  colliderThickness: 0.44
+  colliderThickness: 0.7
   colliderOffset: {x: 0, y: 0.5, z: 0}
   collisionMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 5
   isInDebugMode: 1
-  collisionFlag: 1
 --- !u!114 &8987735575019140168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,6 +396,7 @@ MonoBehaviour:
     anchorOffset: {x: -0, y: 0, z: 0}
     anchorRotation: {x: 0, y: 0, z: 0}
     Debug: 1
+  _typeMapper: {fileID: 11400000, guid: 27d7000c0b4523c40a1944f35c5e14ee, type: 2}
   _soundRelay:
     soundLibrary: {fileID: 11400000, guid: 16250600b9d05b84f942790d8b6c1179, type: 2}
     soundSource: {fileID: 3496205566530388446}
@@ -405,7 +404,68 @@ MonoBehaviour:
   _minStepInterval: 0.211
   _ignoreMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
+--- !u!1 &4054573663525492094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8504895992703968146}
+  - component: {fileID: 3310267139560333833}
+  m_Layer: 3
+  m_Name: StashOption
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8504895992703968146
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4054573663525492094}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6648669817068404486}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3310267139560333833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4054573663525492094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71a2dbae6f1448c69c4f5afb423b5647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Options:
+  - OptionName: Cancel
+    Interact:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1559890627340247335}
+          m_TargetAssemblyTypeName: MessagePoster, Assembly-CSharp
+          m_MethodName: StashMessage
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &4229622439572712428
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,6 +660,83 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!1 &6650629212219403964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9174436468390518515}
+  - component: {fileID: 1893726718776187408}
+  m_Layer: 3
+  m_Name: CanPostOption
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9174436468390518515
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6650629212219403964}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6648669817068404486}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1893726718776187408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6650629212219403964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71a2dbae6f1448c69c4f5afb423b5647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Options:
+  - OptionName: Post Message
+    Interact:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1559890627340247335}
+          m_TargetAssemblyTypeName: MessagePoster, Assembly-CSharp
+          m_MethodName: PostMessage
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - OptionName: Cancel
+    Interact:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1559890627340247335}
+          m_TargetAssemblyTypeName: MessagePoster, Assembly-CSharp
+          m_MethodName: StashMessage
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &6986420488576356495
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +797,9 @@ Transform:
   m_LocalPosition: {x: -8.959199, y: 1.6074225, z: 1.2410005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 9174436468390518515}
+  - {fileID: 8504895992703968146}
   m_Father: {fileID: 1325973916798900135}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1559890627340247335
@@ -679,6 +818,8 @@ MonoBehaviour:
   messagePrefab: {fileID: 7360547325019711509, guid: f7ae05426560c6644bbf2a1a9c4b79a9,
     type: 3}
   messageDistance: 0.025
+  postMessageOptionProvider: {fileID: 1893726718776187408}
+  stashMessageOptionProvider: {fileID: 3310267139560333833}
 --- !u!1001 &1685333805672471068
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -695,17 +836,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 368268ed080e26a4887fea3afb0ada0a,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.15
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 368268ed080e26a4887fea3afb0ada0a,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.15
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 368268ed080e26a4887fea3afb0ada0a,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.15
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 368268ed080e26a4887fea3afb0ada0a,
         type: 3}
@@ -1015,17 +1156,17 @@ PrefabInstance:
     - target: {fileID: -4939156664620789903, guid: 368268ed080e26a4887fea3afb0ada0a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.008201293
+      value: 0.008201291
       objectReference: {fileID: 0}
     - target: {fileID: -4939156664620789903, guid: 368268ed080e26a4887fea3afb0ada0a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0003322564
+      value: 0.0003322673
       objectReference: {fileID: 0}
     - target: {fileID: -4939156664620789903, guid: 368268ed080e26a4887fea3afb0ada0a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.0023246242
+      value: 0.0023246284
       objectReference: {fileID: 0}
     - target: {fileID: -4939156664620789903, guid: 368268ed080e26a4887fea3afb0ada0a,
         type: 3}
@@ -2966,12 +3107,12 @@ PrefabInstance:
     - target: {fileID: 8157105263290137148, guid: 368268ed080e26a4887fea3afb0ada0a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.207629e-10
+      value: -0.000000003085513
       objectReference: {fileID: 0}
     - target: {fileID: 8157105263290137148, guid: 368268ed080e26a4887fea3afb0ada0a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0002690671
+      value: 0.00026906875
       objectReference: {fileID: 0}
     - target: {fileID: 8157105263290137148, guid: 368268ed080e26a4887fea3afb0ada0a,
         type: 3}

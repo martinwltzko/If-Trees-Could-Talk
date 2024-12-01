@@ -31,11 +31,11 @@ namespace AdvancedController
         private bool _cameraEnabled;
         
 
-        private void OnEnable() {
+        private void Awake() {
             player.OnUiLoaded += OnUiLoaded;
         }
 
-        private void OnDisable() {
+        private void OnDestroy() {
             player.OnUiLoaded -= OnUiLoaded;
         }
         
@@ -51,6 +51,8 @@ namespace AdvancedController
             _uiController.OnOptionPressed += OnOptionPressed;
             SetOptionProvider(defaultOptionProvider);
             _initialized = true;
+            
+            Debug.Log("<color=green>PlayerInteractions initialized</color>");
         }
         
         public void SetOptionProvider(OptionProvider optionProvider)
@@ -59,7 +61,7 @@ namespace AdvancedController
             
             _optionProviders.AddLast(optionProvider);
             _currentOptionProvider = optionProvider;
-            _uiController.SetOptionProvider(optionProvider);
+            _uiController?.SetOptionProvider(optionProvider);
         }
         
         public void ClearCurrentOptionProvider()

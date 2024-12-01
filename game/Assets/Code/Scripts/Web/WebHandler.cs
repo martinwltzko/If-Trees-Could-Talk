@@ -13,22 +13,50 @@ using UnityEngine;
 
 public class WebHandler : RegulatorSingleton<WebHandler>
 {
-    [SerializeField] private string uri = "http://127.0.0.1:8000"; // TODO: Change this to your server's IP
+    [SerializeField] private string uri; // TODO: Change this to your server's IP
     [SerializeField, EnableIf("offlineMode")] private string token;
     [SerializeField, ReadOnly, HideIf("offlineMode")] private string playerId;
     [SerializeField] private bool offlineMode;
+
+    public Action OnGetFailed;
+    public Action OnPostFailed;
+    public Action OnPutFailed;
     
-    private async void Start()
+    public static Action OnAuthenticateFailed;
+    public static UniTask<bool> AuthenticationTask;
+    public static bool Authenticated { get; private set; }
+    
+    protected override void Awake()
     {
-        if (offlineMode) return;
-        await UnityServices.InitializeAsync();
-        await Authenticate();
+        base.Awake();
+        AuthenticationTask = AuthenticateAsync();
+    }
+
+    private async UniTask<bool> AuthenticateAsync()
+    {
+        if (offlineMode) return true;
+        try {
+            await UnityServices.InitializeAsync();
+            await Authenticate();
+
+            Debug.Log("<color=green>Authenticated</color>");
+            Authenticated = true;
+            return true;
+        }
+        catch (Exception e)
+        {
+            OnAuthenticateFailed?.Invoke();
+            Debug.Log(e);
+
+            Authenticated = false;
+            return false;
+        }
     }
 
     private async UniTask Authenticate()
     {
-        if (AuthenticationService.Instance.IsSignedIn) return;
-        try {
+        try
+        {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             var accessToken = AuthenticationService.Instance.AccessToken;
             playerId = AuthenticationService.Instance.PlayerId;
@@ -46,8 +74,10 @@ public class WebHandler : RegulatorSingleton<WebHandler>
             Debug.Log($"PlayerId: {playerId}");
             Debug.Log($"Token: {token}");
         }
-        catch (Exception e) {
-            Debug.LogError(e);
+        catch (AuthenticationException e)
+        {
+            Console.WriteLine(e);
+            throw;
         }
     }
     
@@ -62,7 +92,16 @@ public class WebHandler : RegulatorSingleton<WebHandler>
             {"position", positionDict},
             {"normal", normalDict}
         };
-        await Request.Post($"{uri}/api/messages/", auth:auth, json:JsonConvert.SerializeObject(dataDict));
+
+        try
+        {
+            await Request.Post($"{uri}/api/messages/", auth:auth, json:JsonConvert.SerializeObject(dataDict));
+        }
+        catch (Exception e) {
+            OnPostFailed?.Invoke();
+            Debug.LogError(e);
+            throw;
+        }
     }
     
     [Button]
@@ -85,20 +124,28 @@ public class WebHandler : RegulatorSingleton<WebHandler>
         while (queries.Count > 0)
         {
             var query = queries.Dequeue();
-            var msg = await Request.Get(query);
+            
+            try {
+                var msg = await Request.Get(query);
+                
+                // Deserialize the JSON response into a Dictionary and get the results part
+                var json = JsonConvert.DeserializeObject<Dictionary<string, object>>(msg);
+                var resultsJson = JsonConvert.SerializeObject(json["results"]);
 
-            // Deserialize the JSON response into a Dictionary and get the results part
-            var json = JsonConvert.DeserializeObject<Dictionary<string, object>>(msg);
-            var resultsJson = JsonConvert.SerializeObject(json["results"]);
+                // Deserialize 'results' directly into a list of WebMessageWrapper
+                var webMessages = JsonConvert.DeserializeObject<List<WebMessage>>(resultsJson);
+                messages.AddRange(webMessages);
 
-            // Deserialize 'results' directly into a list of WebMessageWrapper
-            var webMessages = JsonConvert.DeserializeObject<List<WebMessage>>(resultsJson);
-            messages.AddRange(webMessages);
-
-            if (json.ContainsKey("next") && amount > webMessages.Count*pages) {
-                if(json["next"]==null) break;
-                queries.Enqueue(json["next"].ToString());
-                pages++;
+                if (json.ContainsKey("next") && amount > webMessages.Count*pages) {
+                    if(json["next"]==null) break;
+                    queries.Enqueue(json["next"].ToString());
+                    pages++;
+                }
+            }
+            catch (Exception e) {
+                OnGetFailed?.Invoke();
+                Debug.LogError(e);
+                throw;
             }
         }
         

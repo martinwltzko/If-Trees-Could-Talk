@@ -34,7 +34,7 @@ namespace AdvancedController
         }
         
         public void ClearInteractionOptions() {
-            PlayerInteractions?.SetOptionProvider(null);
+            PlayerInteractions?.ClearCurrentOptionProvider();
         }
     }
 }

@@ -20,30 +20,25 @@ MonoBehaviour:
     - Martin Waletzko
   - Role: 1
     Names:
-    - Martin Waletzko
+    - Environment - Martin Waletzko
+    - Abandoned Car - AsG_Aligator (CC_BY_NC)
   - Role: 2
     Names:
     - Indie Flower - Kimberly Geswein (OFL)
   MusicCredits:
   - Title: A Road in the Country
     Artist: Caleb Lemond
+    Resource: '@FreeMusicArchive'
     License: 2
   - Title: Could Be (ft. Jesse Taylor)
     Artist: Jenny Mayhem
+    Resource: '@FreeMusicArchive'
     License: 3
-  - Title: A Smile That Explodes (Live @ KEXP)
-    Artist: Josehp Arthur
-    License: 5
-  - Title: Don't Look Back (Live @ KEXP)
-    Artist: Kasey Anderson
-    License: 5
   AssetsCredits:
   - AssetName: 'Dreamscape Nature: Meadows'
     CreatorName: Polyart Studio
   - AssetName: Atmospheric Height Fog
     CreatorName: BOXOPHOBIC
-  - AssetName: Quantum Console
-    CreatorName: QSFW
   - AssetName: Easy Peformant Outline 2D | 3D
     CreatorName: Pirate Parrot
   - AssetName: DOTween Pro
@@ -54,3 +49,13 @@ MonoBehaviour:
     CreatorName: Staggard Creations
   - AssetName: Skybox Series Free
     CreatorName: Avionx
+  - AssetName: Volumetric Lights 2
+    CreatorName: Kronnect
+  - AssetName: UMotion Pro
+    CreatorName: Soxware Interactive
+  Logos:
+  - {fileID: 21300000, guid: 843a497a455ae554497dc68b5465e098, type: 3}
+  - {fileID: 21300000, guid: 6bad0d5633ee8a44c9d338a83fa6c216, type: 3}
+  SpecialThanks:
+  - Made using FMOD Studio by Firelight Technologies Pty Ltd.
+  - Originally made for the GameOff 2024

@@ -18,15 +18,8 @@ public class PlayablePlayer : MonoBehaviour
     [Header("Timeline Settings")]
     [SerializeField] private float loopStart;
     [SerializeField] private float loopEnd;
-
-    [Header("Interaction..")]
-    [SerializeField] private InteractionOptionRelay interactionOptionRelay;
-    //[SerializeField] private PlayerInteractions playerInteractions; //TODO: Implement a robust way to handle this
     private OptionProvider _previousOptionProvider;
-
     private PlayableDirector _director;
-    //
-    // private EventBinding<PlayerLoadedEvent> _playerLoadedEventBinding;
     
     
     [Header("Debug")]
@@ -36,19 +29,7 @@ public class PlayablePlayer : MonoBehaviour
     private void Awake()
     {
         _director = GetComponent<PlayableDirector>();
-        // _playerLoadedEventBinding = new EventBinding<PlayerLoadedEvent>((e) =>
-        // {
-        //     if (e.Loaded) {
-        //         playerInteractions = e.PlayerInstance.PlayerInteractions;
-        //     }
-        // });
-        // EventBus<PlayerLoadedEvent>.Register(_playerLoadedEventBinding);
     }
-    
-    // private void OnDestroy()
-    // {
-    //     EventBus<PlayerLoadedEvent>.Unregister(_playerLoadedEventBinding);
-    // }
     
     private void Update()
     {
@@ -56,18 +37,6 @@ public class PlayablePlayer : MonoBehaviour
         if (_time < loopStart || _cancelled) return;
         if (_time > loopEnd) _director.time = loopStart;
     }
-    
-    // public void UpdateInteractionOptions(OptionProvider options)
-    // {
-    //     //playerInteractions.SetOptionProvider(options);
-    //     interactionOptionRelay.SetInteractionOptions(options);
-    // }
-    //
-    // public void ClearInteractionOptions()
-    // {
-    //     //playerInteractions.ClearCurrentOptionProvider();
-    //     interactionOptionRelay.ClearInteractionOptions();
-    // }
     
     public void PlayScene()
     {

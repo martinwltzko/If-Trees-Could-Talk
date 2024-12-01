@@ -71,6 +71,8 @@ public class MessagePoster : MonoBehaviour
             UIController.SetOptionProvider(!AimingHandler.IsAiming
                 ? stashMessageOptionProvider
                 : postMessageOptionProvider);
+            if (!AimingHandler.IsAiming) return;
+            if (AimingHandler.AimingTransform.gameObject.layer == LayerMask.NameToLayer("NotesIgnore")) return;
 
             var position = AimingHandler.AimingPoint;
             var normal = AimingHandler.AimingNormal;

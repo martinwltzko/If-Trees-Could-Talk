@@ -28,7 +28,7 @@ namespace AdvancedController {
         [SerializeField] bool isInDebugMode;
         private bool _isUsingExtendedSensorRange = true; // Use extended range for smoother ground transitions
 
-        public RelativeMovementConfig RelativeMovementConfig { get; private set; } = new RelativeMovementConfig();
+        //public RelativeMovementConfig RelativeMovementConfig { get; private set; } = new RelativeMovementConfig();
         
         public Vector3 LocalVelocity { get; private set; }
         public Vector3 RelativeVelocity { get; private set; }
@@ -74,9 +74,7 @@ namespace AdvancedController {
             _currentGroundAdjustmentVelocity = _tr.up * (distanceToGo / Time.fixedDeltaTime);
             _currentGroundAdjustmentPenalty = 1f-Mathf.Clamp01(distanceToGo / middle); //TODO: Adjust this value to be persistent on stairs
         }
-
-        public bool collisionFlag;
-
+        
         private bool ComputeCollisionOverlap(out Vector3 delta)
         {
             var bottom = _tr.position + _col.center - Vector3.up * (_col.height / 2f - _col.radius);
@@ -84,6 +82,7 @@ namespace AdvancedController {
             var radius = _col.radius;
 
             delta = Vector3.zero;
+            Physics.queriesHitTriggers = false;
             var overlaps = Physics.OverlapCapsule(bottom, top, radius).Where(c => c.transform != transform).ToArray();;
             foreach (var overlap in overlaps)
             {
@@ -115,20 +114,21 @@ namespace AdvancedController {
         // NOTE: Older versions of Unity use rb.velocity instead
         public void SetVelocity(Vector3 velocity)
         {
-            var overlapping = ComputeCollisionOverlap(out var overlap);
-            var momentum = RelativeMovementConfig.UpdateMovingGround(_rb.position, _rb.rotation, 
-                _sensor.GetTransform(),
-                LocalVelocity * Time.fixedDeltaTime);
+            // var overlapping = ComputeCollisionOverlap(out var overlap);
+            // var momentum = RelativeMovementConfig.UpdateMovingGround(_rb.position, _rb.rotation, 
+            //     _sensor.GetTransform(),
+            //     LocalVelocity * Time.fixedDeltaTime);
             //if(overlapping) RelativeMovementConfig.UpdateMovingGround(_rb.position, _rb.rotation, _sensor.GetTransform(), overlap);
             
             LocalVelocity = velocity * _currentGroundAdjustmentPenalty + _currentGroundAdjustmentVelocity;
             LocalVelocity = AdjustVelocityForCollisions(LocalVelocity);
             
-            RelativeVelocity = RelativeMovementConfig.GetGroundVelocity(_rb.position);
-            RelativeVelocity = AdjustVelocityForCollisions(RelativeVelocity);
+            // RelativeVelocity = RelativeMovementConfig.GetGroundVelocity(_rb.position);
+            // RelativeVelocity = AdjustVelocityForCollisions(RelativeVelocity);
+            // _rb.linearVelocity = LocalVelocity + RelativeVelocity + momentum;
             
-            _rb.linearVelocity = LocalVelocity + RelativeVelocity + momentum;
-            _rb.position += overlap;
+            _rb.linearVelocity = LocalVelocity;
+            //_rb.position += overlap;
         }
         public void SetExtendSensorRange(bool isExtended) => _isUsingExtendedSensorRange = isExtended;
 
@@ -190,7 +190,7 @@ namespace AdvancedController {
 
         private void OnDrawGizmos()
         {
-            RelativeMovementConfig.DebugGizmos();
+            //RelativeMovementConfig.DebugGizmos();
         }
     }
 }

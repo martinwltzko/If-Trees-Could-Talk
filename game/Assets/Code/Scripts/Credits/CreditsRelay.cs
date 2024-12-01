@@ -16,14 +16,16 @@ public class CreditsRelay : MonoBehaviour
     #endif
     
     [SerializeField] private TextMeshProUGUI creditsTextPrefab;
+    [SerializeField] private Image creditsLogoPrefab;
     [SerializeField] private VerticalLayoutGroup creditsParent;
     [SerializeField] private RectTransform scrollContentRect;
+    [SerializeField] private HorizontalLayoutGroup logoParent;
 
     [SerializeField] private CreditsCreator creditsCreator;
 
     private int _blocks = 0;
     private int _amountMessages;
-    private float _preferredHeight = 200;
+    [SerializeField] private float initialHeight = 500;
 
     private void Start() {
         _amountMessages = (int)SaveSystem.GetFloat(SaveSystem.SaveVariable.MessageAmount);
@@ -31,12 +33,12 @@ public class CreditsRelay : MonoBehaviour
         #if UNITY_EDITOR
         if (loadFromResources) {
             var json = System.IO.File.ReadAllText(Application.dataPath + $"/{localPath}");
-            GenerateCredits(json);
+            GenerateCredits(json, creditsCreator.Logos);
             return;
         }
         #endif
         
-        GenerateCredits(creditsCreator.GenerateJson(save:false));
+        GenerateCredits(creditsCreator.GenerateJson(save:false), creditsCreator.Logos);
     }
 
     #if UNITY_EDITOR
@@ -49,18 +51,24 @@ public class CreditsRelay : MonoBehaviour
     [Button]
     private void GenerateCredits()
     {
-        GenerateCredits(creditsCreator.GenerateJson());
+        GenerateCredits(creditsCreator.GenerateJson(), creditsCreator.Logos);
     }
-    private void GenerateCredits(string json)
+    private void GenerateCredits(string json, List<Sprite> logos)
     {
         var creditsDict = JsonConvert.DeserializeObject<Dictionary<CreditsCreator.Roles, List<string>>>(json);
-
+        var preferredHeight = initialHeight;
+        
+        // Clear existing credits
         foreach (Transform child in creditsParent.transform) {
             if(Application.isEditor) DestroyImmediate(child.gameObject);
             else Destroy(child.gameObject);
         }
+        
+        // Credits
         foreach (var (role, text) in creditsDict)
         {
+            if(role==CreditsCreator.Roles.SpecialThanks) continue;
+            
             var creditText = Instantiate(creditsTextPrefab, creditsParent.transform);
             StringBuilder sb = new StringBuilder();
             foreach (var line in text) {
@@ -69,18 +77,48 @@ public class CreditsRelay : MonoBehaviour
             }
             creditText.text = $"{role}:\n{sb}";
             AdjustHeight(creditText, creditText.rectTransform);
-            _preferredHeight += creditText.preferredHeight;
+            initialHeight += creditText.preferredHeight;
             _blocks += 1;
         }
+        
+        // Messages / Stats
         if (_amountMessages > 0)
         {
             var narrativeCredit = Instantiate(creditsTextPrefab, creditsParent.transform);
             narrativeCredit.text = $"Narrative:\n Messages (x{_amountMessages}) - You";
-            _preferredHeight += narrativeCredit.preferredHeight;
+            preferredHeight += narrativeCredit.preferredHeight;
             _blocks += 1;
         }
         
-        AdjustHeight(_preferredHeight + _blocks*creditsParent.spacing, scrollContentRect);
+        // Special Thanks
+        var specialThanks = Instantiate(creditsTextPrefab, creditsParent.transform);
+        var builder = new StringBuilder();
+        foreach (var line in creditsDict[CreditsCreator.Roles.SpecialThanks]) {
+            builder.Append(line);
+            builder.Append("\n");
+        }
+        specialThanks.text = $"{builder}";
+        AdjustHeight(specialThanks, specialThanks.rectTransform);
+        preferredHeight += specialThanks.preferredHeight;
+        _blocks += 1;
+    
+        // Logos
+        int imageSizeY = 0;
+        int imageSizeX = 0;
+        foreach (var logo in logos) {
+            var image = Instantiate(creditsLogoPrefab, logoParent.transform);
+            image.sprite = logo;
+            image.SetNativeSize();
+            if(image.rectTransform.sizeDelta.y > imageSizeY)
+                imageSizeY = (int)image.rectTransform.sizeDelta.y;
+            imageSizeX += (int)image.rectTransform.sizeDelta.x;
+        }
+        logoParent.transform.parent = null;
+        ((RectTransform)logoParent.transform).sizeDelta = new Vector2(imageSizeX, imageSizeY);
+        logoParent.transform.parent = creditsParent.transform;
+        
+        // Adjust the height of the scroll content
+        AdjustHeight(preferredHeight + _blocks*creditsParent.spacing + imageSizeY, scrollContentRect);
     }
     
     public void AdjustHeight(float preferredHeight, RectTransform rectTransform)

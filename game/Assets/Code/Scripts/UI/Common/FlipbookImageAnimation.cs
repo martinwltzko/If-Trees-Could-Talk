@@ -1,44 +1,48 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
 public class FlipbookImageAnimation : MonoBehaviour
 {
+    [SerializeField] private Image image;
     [SerializeField] private List<Sprite> sprites;
     [SerializeField] private float animationSpeed = 0.1f;
+    [SerializeField] private bool playOnAwake = true;
 
-    private Image _image;
-    private Coroutine _flipbookCoroutine;
+    private bool _playing;
+    private int _currentSpriteIndex;
 
-    private void Awake()
+    private void Awake() 
     {
-        _image = GetComponent<Image>();
+        if (playOnAwake) Play();
     }
 
-    private void OnEnable()
-    {
-        _flipbookCoroutine = StartCoroutine(Flipbook());
+    private void OnDestroy() {
+        _playing = false;
     }
 
-    private void OnDisable()
+    public async void Play()
     {
-        if(_flipbookCoroutine == null) return;
-        StopCoroutine(_flipbookCoroutine);
-        _flipbookCoroutine = null;
+        if (_playing) {
+            _currentSpriteIndex = 0;
+            return;
+        }
+        Debug.Log("<color=green>Playing flipbook animation</color>");
+        await PlayAsync();
     }
     
-    private IEnumerator Flipbook()
+    private async UniTask PlayAsync()
     {
-        int i = 0;
-        while (true) 
-        {
-            // Set the sprite to the current frame
-            yield return new WaitForSeconds(animationSpeed);
-            i = (i + 1) % sprites.Count;
-            _image.sprite = sprites[i];
+        _currentSpriteIndex = 0;
+        _playing = true;
+        while (_playing) {
+            image.sprite = sprites[_currentSpriteIndex];
+            _currentSpriteIndex = (_currentSpriteIndex + 1) % sprites.Count;
+            await UniTask.Delay(TimeSpan.FromSeconds(animationSpeed));
         }
     }
 }

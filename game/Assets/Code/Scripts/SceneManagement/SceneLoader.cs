@@ -7,6 +7,7 @@ using UnityEngine.UI;
 namespace Systems.SceneManagement {
     public class SceneLoader : MonoBehaviour, IDependencyProvider { 
         [SerializeField] StatusBar loadingBar;
+        [SerializeField] FlipbookImageAnimation loadingAnimation;
         [SerializeField] float fillSpeed = 0.5f;
         [SerializeField] Canvas loadingCanvas;
         [SerializeField] Camera loadingCamera;
@@ -25,25 +26,15 @@ namespace Systems.SceneManagement {
             manager.OnSceneGroupLoaded += () => Debug.Log("Scene group loaded");
         }
 
-        async void Start() {
+        async void Start()
+        {
             await LoadSceneGroup(0);
-        }
-        
-        void Update() {
-            if (!isLoading) return;
-
-            float currentFillAmount = loadingBar.FillAmount;
-            float progressDifference = Mathf.Abs(currentFillAmount - targetProgress);
-
-            float dynamicFillSpeed = progressDifference * fillSpeed;
-
-            loadingBar.UpdateStatusBar(Mathf.Lerp(currentFillAmount, targetProgress, Time.deltaTime * dynamicFillSpeed),
-                1f);
         }
 
         public async Task LoadSceneGroup(int index) {
-            loadingBar.UpdateStatusBar(0f, 1f);
+            loadingAnimation.Play();
             targetProgress = 1f;
+            if(!WebHandler.Authenticated) await WebHandler.AuthenticationTask; //TODO: Remove if this class should be reusable
 
             if (index < 0 || index >= sceneGroups.Length) {
                 Debug.LogError("Invalid scene group index: " + index);

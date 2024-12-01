@@ -15,8 +15,8 @@ namespace AdvancedController
         public bool IsAiming { get; private set; } //TODO: Find a better name
         public Vector3 AimingPoint { get; private set; }
         public Vector3 AimingNormal { get; private set; }
-
-        private Transform _aimingTransform;
+        public Transform AimingTransform { get; private set; }
+        
         private IAimingTarget _aimingTarget;
         private IAimingTarget _previousAimingTarget;
 
@@ -27,8 +27,8 @@ namespace AdvancedController
             IsAiming = Physics.Raycast(ray, out RaycastHit hit, Stats.aimingDistance, Stats.aimingLayerMask);
             IsAiming = Vector3.Distance(hit.point, PlayerTransform.position) <= Stats.aimingDistance && hit.transform!=null;
             
-            _aimingTransform = IsAiming ? hit.transform : null;
-            _aimingTarget = _aimingTransform?.GetComponent<IAimingTarget>();
+            AimingTransform = IsAiming ? hit.transform : null;
+            _aimingTarget = AimingTransform?.GetComponent<IAimingTarget>();
             AimingPoint = IsAiming ? hit.point : Vector3.zero;
             AimingNormal = IsAiming ? hit.normal : Vector3.zero;
             

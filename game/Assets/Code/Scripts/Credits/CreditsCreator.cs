@@ -13,6 +13,8 @@ public class CreditsCreator : ScriptableObject
     [Space(10)] public List<Credit> Credits;
     [Space(10)] public List<TrackCredit> MusicCredits;
     [Space(10)] public List<AssetCredit> AssetsCredits;
+    [Space(10)] public List<Sprite> Logos;
+    [Space(10)] public List<string> SpecialThanks;
     
     private readonly Dictionary<Roles, List<string>> _creditsDict = new(); 
 
@@ -34,6 +36,7 @@ public class CreditsCreator : ScriptableObject
             _creditsDict[Roles.Music].Add(credit.ToString());
         foreach (var credit in AssetsCredits)
             _creditsDict[Roles.Assets].Add(credit.ToString());
+        _creditsDict[Roles.SpecialThanks].AddRange(SpecialThanks);
         
         
         var json = JsonConvert.SerializeObject(_creditsDict, Formatting.Indented);
@@ -50,6 +53,8 @@ public class CreditsCreator : ScriptableObject
         
         return json;
     }
+    
+    public List<Sprite> GetLogos() => Logos;
     
     [Serializable]
     public class Credit
@@ -74,10 +79,11 @@ public class CreditsCreator : ScriptableObject
     {
         public string Title;
         public string Artist;
+        public string Resource;
         public License License;
         
         public override string ToString() {
-            return $"{Title} - {Artist} ({License})";
+            return $"{Title} - {Artist}\n{Resource} under ({License})";
         }
     }
 
@@ -88,6 +94,7 @@ public class CreditsCreator : ScriptableObject
         Font,
         Music,
         Assets,
+        SpecialThanks,
     }
 
     public enum License
@@ -97,6 +104,5 @@ public class CreditsCreator : ScriptableObject
         CC_BY_NC,
         CC_BY_NC_SA,
         CC0,
-        Retired,
     }
 }

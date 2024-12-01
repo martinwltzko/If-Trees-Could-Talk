@@ -95,9 +95,15 @@ public class AudioManager : RegulatorSingleton<AudioManager>
     
     public EventInstance CreateInstance(EventReference soundEvent)
     {
-        EventInstance eventInstance =  RuntimeManager.CreateInstance(soundEvent);
+        var eventInstance = CreateTemporaryInstance(soundEvent);
         _eventInstances.Add(eventInstance);
         _eventNames.Add(soundEvent.ToString());
+        return eventInstance;
+    }
+
+    public EventInstance CreateTemporaryInstance(EventReference soundEvent)
+    {
+        EventInstance eventInstance =  RuntimeManager.CreateInstance(soundEvent);
         return eventInstance;
     }
 

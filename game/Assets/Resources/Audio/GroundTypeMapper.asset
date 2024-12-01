@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ff4fa650c924b75bcceb6aa95b03619, type: 3}
+  m_Name: GroundTypeMapper
+  m_EditorClassIdentifier: 
+  TerrainMappings:
+  - Layer: {fileID: 8574412962073106934, guid: a52c1ccfba5ea9648acb65bb5108524e, type: 2}
+    Type: 0
+  - Layer: {fileID: 8574412962073106934, guid: ba9d148503605aa488995df4b6cd4b2c, type: 2}
+    Type: 0
+  - Layer: {fileID: 8574412962073106934, guid: e10e46033aca09a4b8f983fde1c28361, type: 2}
+    Type: 0
+  - Layer: {fileID: 8574412962073106934, guid: 1fc13005dd2c0ff4da74def9679cbb11, type: 2}
+    Type: 1
+  - Layer: {fileID: 8574412962073106934, guid: e36321de30153194eafa41e131ad9fc2, type: 2}
+    Type: 1
+  - Layer: {fileID: 8574412962073106934, guid: 35e9a24ba4228ca4ca2db903ad2412f9, type: 2}
+    Type: 2
+  - Layer: {fileID: 8574412962073106934, guid: fb10c5ba31482e44c97ef49a902d5170, type: 2}
+    Type: 2

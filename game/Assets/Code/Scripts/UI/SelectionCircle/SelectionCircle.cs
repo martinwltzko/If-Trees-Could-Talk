@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using AdvancedController;
 using Code.Scripts.UI;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -9,6 +10,7 @@ using UnityEngine.UI.Extensions;
 
 public class SelectionCircle : MonoBehaviour
 {
+    [SerializeField] private UICircle circle;
     [SerializeField] private int idleScaling = 20;
     [SerializeField] private int activeScaling = 100;
     [SerializeField] private float activationSmoothness = 10f;
@@ -31,6 +33,7 @@ public class SelectionCircle : MonoBehaviour
     private OptionProvider _optionProvider;
 
     private RectTransform _rt;
+    private bool _enabled;
 
     private void Start()
     {
@@ -38,9 +41,33 @@ public class SelectionCircle : MonoBehaviour
         _initialPosition = _rt.position;
     }
 
+    public void Enable()
+    {
+        _rt.DOSizeDelta(new Vector2(idleScaling, idleScaling), activationSmoothness);
+        DOVirtual.Float(0f, 1f, activationSmoothness, value => {
+            var color = circle.color;
+            color.a = value;
+            circle.color = color;
+        });
+        _enabled = true;
+    }
+    
+    public async void Disable()
+    {
+        _rt.DOSizeDelta(new Vector2(0, 0), activationSmoothness);
+        DOVirtual.Float(1f, 0f, activationSmoothness, value => {
+            var color = circle.color;
+            color.a = value;
+            circle.color = color;
+        });
+        await UniTask.Delay(TimeSpan.FromSeconds(activationSmoothness));
+        _enabled = false;
+    }
+    
+
     public void SetOptions(OptionProvider optionProvider)
     {
-        if(_optionProvider == optionProvider) return;
+        if(_optionProvider == optionProvider) return; //TODO: This could cause a bug
         _optionProvider = optionProvider;
         
         UpdateOptions(optionProvider);
@@ -60,7 +87,8 @@ public class SelectionCircle : MonoBehaviour
     public void OnPrimary(bool down, Vector2 position, out OptionProvider.Option selectedOption)
     {
         selectedOption = null;
-        
+        if (!_enabled) return;
+
         if (down)
         {
             _pressed = true;
@@ -120,7 +148,7 @@ public class SelectionCircle : MonoBehaviour
 
     private void CheckSelection()
     {
-        if(_optionProvider==null) return;
+        if(_optionProvider==null || !_enabled) return;
         
         var optionSelected = false;
         foreach (var option in _optionProvider.Options)

@@ -3,25 +3,29 @@
     "Martin Waletzko"
   ],
   "Art": [
-    "Martin Waletzko"
+    "Environment - Martin Waletzko",
+    "Abandoned Car - AsG_Aligator (CC_BY_NC)"
   ],
   "Font": [
     "Indie Flower - Kimberly Geswein (OFL)"
   ],
   "Music": [
-    "A Road in the Country - Caleb Lemond (CC_BY_NC)",
-    "Could Be (ft. Jesse Taylor) - Jenny Mayhem (CC_BY_NC_SA)",
-    "A Smile That Explodes (Live @ KEXP) - Josehp Arthur (Retired)",
-    "Don't Look Back (Live @ KEXP) - Kasey Anderson (Retired)"
+    "A Road in the Country - Caleb Lemond\n@FreeMusicArchive under (CC_BY_NC)",
+    "Could Be (ft. Jesse Taylor) - Jenny Mayhem\n@FreeMusicArchive under (CC_BY_NC_SA)"
   ],
   "Assets": [
     "Dreamscape Nature: Meadows - Polyart Studio",
     "Atmospheric Height Fog - BOXOPHOBIC",
-    "Quantum Console - QSFW",
     "Easy Peformant Outline 2D | 3D - Pirate Parrot",
     "DOTween Pro - Demigant",
     "Odin Inspector and Serializer - Sirenix",
     "Stylized Water 2 - Staggard Creations",
-    "Skybox Series Free - Avionx"
+    "Skybox Series Free - Avionx",
+    "Volumetric Lights 2 - Kronnect",
+    "UMotion Pro - Soxware Interactive"
+  ],
+  "SpecialThanks": [
+    "Made using FMOD Studio by Firelight Technologies Pty Ltd.",
+    "Originally made for the GameOff 2024"
   ]
 }

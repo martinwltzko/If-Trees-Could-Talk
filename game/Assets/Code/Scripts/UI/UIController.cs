@@ -9,6 +9,7 @@ using EventHandling;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI.Extensions;
 using UnityUtils.StateMachine;
 
 //TODO: Separate this class into a gameUI and main menu controller, also scan for all
@@ -37,15 +38,17 @@ public class UIController : MonoBehaviour
     [SerializeField, HideIf("isMainMenu")] private InGameUIState inGameUIState;
     [SerializeField, HideIf("isMainMenu")] private NoteEditingState noteEditingState;
     [SerializeField, ShowIf("isMainMenu")] private CreditsState creditsState;
+    [SerializeField, ShowIf("isMainMenu")] private NoNetworkState noNetworkState;
     [SerializeField] private OptionsMenuState optionsMenuState;
     [SerializeField] private AudioSettingsState audioSettingsState;
     [SerializeField] private VideoSettingsState videoSettingsState;
     [SerializeField] private GameSettingsState gameSettingsState;
     [SerializeField] private ApplyVideoSettingsState applyVideoSettingsState;
     
+    
     [Header("Debug")]
-    [SerializeField, ReadOnly] private BehaviourState currentState;
-    [SerializeField, ReadOnly] private PlayerInstance player;
+    [SerializeField, Sirenix.OdinInspector.ReadOnly] private BehaviourState currentState;
+    [SerializeField, Sirenix.OdinInspector.ReadOnly] private PlayerInstance player;
     
     private CameraController CameraController => player?.CameraController;
     public SelectionCircle SelectionCircle => selectionCircle;
@@ -64,11 +67,14 @@ public class UIController : MonoBehaviour
         inputReader.Cancel += OnCancel;
         inputReader.Primary += OnClicking;
         inputReader.Secondary += OnCancel;
+        
+        WebHandler.OnAuthenticateFailed += OnNotConnected;
     }
 
     private void Start()
     {
         SetupStateMachine();
+        if(!WebHandler.Authenticated) OnNotConnected();
     }
     
     private void OnEnable() 
@@ -82,8 +88,9 @@ public class UIController : MonoBehaviour
         EventBus<UILoadedEvent>.Ping(new UILoadedEvent(this, false, OnUILoaded));
     }
 
-    private void OnUILoaded(PlayerInstance playerInstance) {
-        player = playerInstance;
+    private void OnDestroy()
+    {
+        WebHandler.OnAuthenticateFailed -= OnNotConnected;
     }
 
     private void Update()
@@ -95,6 +102,15 @@ public class UIController : MonoBehaviour
     }
 
     private void FixedUpdate() => _stateMachine.FixedUpdate();
+    
+    private void OnUILoaded(PlayerInstance playerInstance) {
+        player = playerInstance;
+    }
+
+    private void OnNotConnected()
+    {
+        ChangeState(noNetworkState);
+    }
 
     private void SetupStateMachine()
     {
@@ -110,6 +126,7 @@ public class UIController : MonoBehaviour
         noteEditingState?.Initialize(this);
         creditsState?.Initialize(this);
         applyVideoSettingsState?.Initialize(this);
+        noNetworkState?.Initialize(this);
         
         At(inGameUIState, pauseMenuState, () => _cancelPressedThisFrame);
         At(audioSettingsState, optionsMenuState, () => _cancelPressedThisFrame);
@@ -126,6 +143,7 @@ public class UIController : MonoBehaviour
         At(noteEditingState, inGameUIState, () => _cancelPressedThisFrame);
         
         At(creditsState, mainMenuState, () => _cancelPressedThisFrame && isMainMenu);
+        At(noNetworkState, mainMenuState, () => _cancelPressedThisFrame && isMainMenu);
         
         _stateMachine.SetState(isMainMenu ? mainMenuState : inGameUIState);
     }

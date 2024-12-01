@@ -33,11 +33,6 @@ public class PlayerInstance : MonoBehaviour
         EventBus<UILoadedEvent>.Register(_uiLoadedEventBinding);
         EventBus<PlayerLoadedEvent>.Repeat(new PlayerLoadedEvent(this, true));
     }
-
-    private void OnDisable()
-    {
-        EventBus<PlayerLoadedEvent>.Repeat(new PlayerLoadedEvent(this, false));
-    }
     
     private void Start() 
     {

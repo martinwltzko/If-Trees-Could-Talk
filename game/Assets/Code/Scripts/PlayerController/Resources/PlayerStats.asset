@@ -27,4 +27,4 @@ MonoBehaviour:
   aimingDistance: 5
   aimingLayerMask:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 193

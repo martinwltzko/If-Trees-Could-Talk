@@ -82,8 +82,6 @@ public class UIRaycaster : MonoBehaviour
             graphicRaycaster.Raycast(pointerEventData, raycastResults);
             allRaycastResults.AddRange(raycastResults);
         }
-
-        Debug.Log("UI Hits: " + allRaycastResults.Count);
         for(int i = 0; i < allRaycastResults.Count; i++)
         {
             if(i >= results.Length) break;
