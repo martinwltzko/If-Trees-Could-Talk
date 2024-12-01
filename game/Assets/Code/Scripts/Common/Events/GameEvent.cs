@@ -15,15 +15,6 @@ public class GameEvent : ScriptableObject
             _eventListeners[i].OnEventRaised();
         }
     }
-
-    protected void Raise<T>(T t)
-    {
-        Debug.Log("Dynamic event raised of type " + typeof(T) + " with listeners: " + _eventListeners.Count);
-        for (int i = _eventListeners.Count - 1; i >= 0; i--)
-        {
-            _eventListeners[i].OnEventRaised<T>(t);
-        }
-    }
     
     public void RegisterListener(IGameEventListener listener)
     {

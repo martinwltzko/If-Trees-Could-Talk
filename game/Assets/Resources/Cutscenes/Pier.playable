@@ -1955,7 +1955,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
   m_Name: Signal Emitter
   m_EditorClassIdentifier: 
-  m_Time: 37.766666666666666
+  m_Time: 38.78333333333333
   m_Retroactive: 0
   m_EmitOnce: 0
   m_Asset: {fileID: 11400000, guid: e4e32723d5b92d14bb4831404406d831, type: 2}
@@ -2152,6 +2152,22 @@ MonoBehaviour:
   VirtualCamera:
     exposedName: f2801c91cb0eb414dbbf6d31f7498033
     defaultValue: {fileID: 0}
+--- !u!114 &1430156669947422818
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
+  m_Name: Signal Emitter
+  m_EditorClassIdentifier: 
+  m_Time: 37.766666666666666
+  m_Retroactive: 0
+  m_EmitOnce: 0
+  m_Asset: {fileID: 11400000, guid: 98bfa9a490312e4429d9adce414ecede, type: 2}
 --- !u!114 &1836090372123194486
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4005,6 +4021,7 @@ MonoBehaviour:
   m_Children:
   - {fileID: -3457839957698098912}
   - {fileID: 4290605479207928707}
+  - {fileID: 8780386543528128083}
   m_Clips: []
   m_Markers:
     m_Objects: []
@@ -4455,6 +4472,30 @@ MonoBehaviour:
   m_Loop: 0
   m_Version: 1
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
+--- !u!114 &8780386543528128083
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46e36075dd1c124a8422c228e75e1fb, type: 3}
+  m_Name: Signal Track (2)
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 6589223267533479398}
+  m_Children: []
+  m_Clips: []
+  m_Markers:
+    m_Objects:
+    - {fileID: 1430156669947422818}
 --- !u!114 &9020672902835896076
 MonoBehaviour:
   m_ObjectHideFlags: 1

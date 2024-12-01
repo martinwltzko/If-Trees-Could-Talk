@@ -59,6 +59,8 @@ namespace AdvancedController
         {
             if(optionProvider == null) return;
             
+            Debug.Log("2. ==== Setting interaction options (" + optionProvider.name + ") ====");
+            
             _optionProviders.AddLast(optionProvider);
             _currentOptionProvider = optionProvider;
             _uiController?.SetOptionProvider(optionProvider);
@@ -68,6 +70,8 @@ namespace AdvancedController
         {
             if(_optionProviders.Count > 0) _optionProviders.RemoveLast();
             _currentOptionProvider = _optionProviders.Count > 0 ? _optionProviders.Last.Value : defaultOptionProvider;
+            
+            Debug.Log(" ==== Clearing interaction options ====");
             
             if(!TryGetSelectionCircle(out var selectionCircle)) return;
             selectionCircle.SetOptions(_currentOptionProvider);

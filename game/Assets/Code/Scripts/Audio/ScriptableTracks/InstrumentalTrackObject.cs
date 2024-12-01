@@ -10,6 +10,6 @@ public class InstrumentalTrackObject : ScriptableObject
 [Serializable]
 public enum MusicInstrumentalTrack
 {
-    Track01=0,
-    Track02=1,
+    NeverAlone=0,
+    NotAssigned=1,
 }

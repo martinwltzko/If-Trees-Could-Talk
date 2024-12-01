@@ -34,6 +34,14 @@ MonoBehaviour:
     Artist: Jenny Mayhem
     Resource: '@FreeMusicArchive'
     License: 3
+  - Title: Tell The Stories
+    Artist: The Twin Atlas
+    Resource: '@FreeMusicArchive'
+    License: 3
+  - Title: Ambient Vol6 Never Alone Main
+    Artist: Ovani Sounds
+    Resource: '@OvaniSounds'
+    License: 5
   AssetsCredits:
   - AssetName: 'Dreamscape Nature: Meadows'
     CreatorName: Polyart Studio

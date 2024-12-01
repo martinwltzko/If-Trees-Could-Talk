@@ -1,5 +1,9 @@
 public interface IGameEventListener
 {
     virtual void OnEventRaised() { }
-    virtual void OnEventRaised<T>(T t) { }
+}
+
+public interface IGameEventListener<T>
+{
+    void OnEventRaised(T value);
 }

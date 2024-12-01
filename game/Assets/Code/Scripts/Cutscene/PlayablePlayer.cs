@@ -7,6 +7,7 @@ using EventHandling;
 using Interaction;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.Events;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using UnityUtils.Aiming;
@@ -18,6 +19,11 @@ public class PlayablePlayer : MonoBehaviour
     [Header("Timeline Settings")]
     [SerializeField] private float loopStart;
     [SerializeField] private float loopEnd;
+    
+    [SerializeField] private float endTime;
+    [SerializeField] private UnityEvent onDirectorEnd;
+    private bool _ended;
+    
     private OptionProvider _previousOptionProvider;
     private PlayableDirector _director;
     
@@ -34,6 +40,10 @@ public class PlayablePlayer : MonoBehaviour
     private void Update()
     {
         _time = (float)_director.time;
+        if (!_ended && _time >= endTime) {
+            onDirectorEnd.Invoke();
+            _ended = true;
+        }
         if (_time < loopStart || _cancelled) return;
         if (_time > loopEnd) _director.time = loopStart;
     }
@@ -42,6 +52,7 @@ public class PlayablePlayer : MonoBehaviour
     {
         _director.Play();
         _cancelled = false;
+        _ended = false;
     }
     
     public void CancelScene()

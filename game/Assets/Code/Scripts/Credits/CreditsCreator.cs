@@ -104,5 +104,6 @@ public class CreditsCreator : ScriptableObject
         CC_BY_NC,
         CC_BY_NC_SA,
         CC0,
+        RoyaltyFree,
     }
 }

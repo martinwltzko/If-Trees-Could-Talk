@@ -25,6 +25,7 @@ MonoBehaviour:
   slopeLimit: 60
   useLocalMomentum: 0
   aimingDistance: 5
+  aimingSphereRadius: 0.05
   aimingLayerMask:
     serializedVersion: 2
     m_Bits: 193

@@ -916,7 +916,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 542885781}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -1134,7 +1134,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: df9c5c28e7c1093408c084b61e51c449, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6d5026ca818ee81429319c89ed122bc5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1632,7 +1632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _musicLibrary: {fileID: 11400000, guid: a5a9587e23be3aa49bebd6c62ab944f4, type: 2}
   playOnStart: 1
-  trackType: 0
+  trackType: 1
   vocalStartTrack: 0
   instrumentalStartTrack: 0
 --- !u!4 &1401092070
@@ -2178,7 +2178,7 @@ MonoBehaviour:
   scrollContentRect: {fileID: 516258848}
   logoParent: {fileID: 1190044412}
   creditsCreator: {fileID: 11400000, guid: 772e2f8e7f6ebb840883f8251c1025fc, type: 2}
-  initialHeight: 1500
+  initialHeight: 1850
 --- !u!1 &1620147194
 GameObject:
   m_ObjectHideFlags: 0
@@ -2910,7 +2910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.84313726}
+  m_Color: {r: 0.20452507, g: 0.20754719, b: 0.13803846, a: 0.3764706}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3577,7 +3577,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2002697224
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4003,6 +4003,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7898199523510509817, guid: 988ef912d38d35c4d9338a828d68fcf1,
         type: 3}
+      propertyPath: isMainMenu
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7898199523510509817, guid: 988ef912d38d35c4d9338a828d68fcf1,
+        type: 3}
       propertyPath: creditsState
       value: 
       objectReference: {fileID: 1592600928}
@@ -4077,6 +4082,11 @@ PrefabInstance:
     - target: {fileID: 23164168526494486, guid: 42136ea1abfd38146bb6084b8f63282d,
         type: 3}
       propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 161344321396969457, guid: 42136ea1abfd38146bb6084b8f63282d,
+        type: 3}
+      propertyPath: m_Alpha
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 377595050725145034, guid: 42136ea1abfd38146bb6084b8f63282d,

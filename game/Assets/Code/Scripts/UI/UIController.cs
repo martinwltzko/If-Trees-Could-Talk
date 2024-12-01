@@ -60,7 +60,7 @@ public class UIController : MonoBehaviour
     private bool _openNote;
     private bool _editingNote;
     
-    public Action<OptionProvider.Option> OnOptionPressed = delegate { };
+    public event Action<OptionProvider.Option> OnOptionPressed = delegate { };
 
     private void Awake()
     {
@@ -181,7 +181,9 @@ public class UIController : MonoBehaviour
         
         CameraController.enabled = !isPressed;
         selectionCircle.OnPrimary(isPressed, inputReader.MousePosition, out var option);
-        if (option != null) OnOptionPressed(option);
+        if (option != null) {
+            OnOptionPressed.Invoke(option);
+        }
 
     }
     
@@ -217,8 +219,9 @@ public class UIController : MonoBehaviour
     
     public void SetOptionProvider(OptionProvider optionProvider)
     {
-        if(selectionCircle == null) return;
-        selectionCircle.SetOptions(optionProvider);
+        Debug.Log("3. ==== Setting interaction options (" + optionProvider.name + ") ====");
+        
+        selectionCircle?.SetOptions(optionProvider);
     }
 
     public void OpenNote()

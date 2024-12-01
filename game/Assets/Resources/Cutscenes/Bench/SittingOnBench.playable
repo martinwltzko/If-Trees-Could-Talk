@@ -126,7 +126,7 @@ MonoBehaviour:
     m_Start: 5
     m_ClipIn: 0
     m_Asset: {fileID: 4756857097493671635}
-    m_Duration: 27.56666666666667
+    m_Duration: 28.81666666666667
     m_TimeScale: 1
     m_ParentTrack: {fileID: -7400553497585347686}
     m_EaseInDuration: 0
@@ -174,7 +174,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: SittingSwingIdle
   - m_Version: 1
-    m_Start: 32.56666666666667
+    m_Start: 33.81666666666667
     m_ClipIn: 0
     m_Asset: {fileID: -6805554460383366614}
     m_Duration: 7.95
@@ -761,6 +761,7 @@ MonoBehaviour:
   m_Children:
   - {fileID: 5082120687833356666}
   - {fileID: 7065427645259969454}
+  - {fileID: 3431406192727446063}
   - {fileID: -3775427668644443286}
   - {fileID: 6787993829975168955}
   m_Clips: []
@@ -1544,6 +1545,29 @@ AnimationClip:
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
   m_Events: []
+--- !u!114 &3431406192727446063
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46e36075dd1c124a8422c228e75e1fb, type: 3}
+  m_Name: Signal Track (2)
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: -5493156357501550523}
+  m_Children: []
+  m_Clips: []
+  m_Markers:
+    m_Objects: []
 --- !u!114 &3474470004402666979
 MonoBehaviour:
   m_ObjectHideFlags: 1

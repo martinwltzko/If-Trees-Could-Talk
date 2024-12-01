@@ -99,13 +99,13 @@ public class InputReader : ScriptableObject, IPlayerActions, IInputReader {
     }
 
     public void OnJump(InputAction.CallbackContext context) {
-        switch (context.phase) {
-            case InputActionPhase.Started:
-                Jump.Invoke(true);
-                break;
-            case InputActionPhase.Canceled:
-                Jump.Invoke(false);
-                break;
-        }
+        // switch (context.phase) {
+        //     case InputActionPhase.Started:
+        //         Jump.Invoke(true);
+        //         break;
+        //     case InputActionPhase.Canceled:
+        //         Jump.Invoke(false);
+        //         break;
+        // }
     }
 }

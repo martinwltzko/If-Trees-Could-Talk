@@ -9,6 +9,7 @@ namespace AdvancedController
     {
         private EventBinding<PlayerLoadedEvent> _playerLoadedEventBinding;
         private PlayerInstance _player;
+        private EventBinding<UILoadedEvent> _uiLoadedEventBinding;
         
         private PlayerInteractions PlayerInteractions => _player?.PlayerInteractions;
 
@@ -30,10 +31,12 @@ namespace AdvancedController
         }
         
         public void SetInteractionOptions(OptionProvider options) {
+            Debug.Log($" 1. ==== Setting interaction options ({options.name}) ====");
             PlayerInteractions?.SetOptionProvider(options);
         }
         
         public void ClearInteractionOptions() {
+            Debug.Log(" ==== Clearing interaction options ====");
             PlayerInteractions?.ClearCurrentOptionProvider();
         }
     }

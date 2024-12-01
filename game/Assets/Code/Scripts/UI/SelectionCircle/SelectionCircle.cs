@@ -70,6 +70,8 @@ public class SelectionCircle : MonoBehaviour
         if(_optionProvider == optionProvider) return; //TODO: This could cause a bug
         _optionProvider = optionProvider;
         
+        Debug.Log("4. ==== Setting interaction options (" + optionProvider.name + ") ====");
+        
         UpdateOptions(optionProvider);
     }
 
@@ -144,6 +146,8 @@ public class SelectionCircle : MonoBehaviour
             
             _optionsMapping.Add(option, optionTransform);
         }
+        
+        Debug.Log($"5. ==== Interaction options set ({optionProvider.name}) ====");
     }
 
     private void CheckSelection()

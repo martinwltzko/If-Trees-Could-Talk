@@ -32,6 +32,7 @@ namespace UnityUtils.StateMachine
         }
         
         public void FixedUpdate() {
+            if(currentNode == null) return;
             currentNode.State?.FixedUpdate();
         }
 

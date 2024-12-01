@@ -6,6 +6,7 @@ using Code.Scripts.MessageSystem;
 using Cysharp.Threading.Tasks;
 using GameSystems.Common.Singletons;
 using Newtonsoft.Json;
+using QFSW.QC;
 using Sirenix.OdinInspector;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -55,6 +56,7 @@ public class WebHandler : RegulatorSingleton<WebHandler>
 
     private async UniTask Authenticate()
     {
+        AdjustStringForHttps(ref uri);
         try
         {
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
@@ -81,9 +83,23 @@ public class WebHandler : RegulatorSingleton<WebHandler>
         }
     }
     
+    [Command("netstat")]
+    public void NetStatus()
+    {
+        Debug.Log($"Authenticated: {Authenticated}");
+        Debug.Log($"Offline Mode: {offlineMode}");
+    }
+    
+    [Command("web-get")]
+    public void GetMessagesCommand()
+    {
+        GetMessages();
+    }
+    
     [Button]
     public async void GenerateMessage(string message, Vector3 position, Vector3 normal)
     {
+        AdjustStringForHttps(ref uri);
         var auth = $"Token {token}";
         var positionDict = new Dictionary<string, float>() { { "x", position.x }, { "y", position.y }, { "z", position.z } };
         var normalDict = new Dictionary<string, float>() { { "x", normal.x }, { "y", normal.y }, { "z", normal.z } };
@@ -92,7 +108,7 @@ public class WebHandler : RegulatorSingleton<WebHandler>
             {"position", positionDict},
             {"normal", normalDict}
         };
-
+        
         try
         {
             await Request.Post($"{uri}/api/messages/", auth:auth, json:JsonConvert.SerializeObject(dataDict));
@@ -107,6 +123,8 @@ public class WebHandler : RegulatorSingleton<WebHandler>
     [Button]
     public async void UpdateMessage(string id, string message)
     {
+        AdjustStringForHttps(ref uri);
+        
         var auth = $"Token {token}";
         var dataDict = new Dictionary<string, string> { {"message", message } };
         await Request.Put($"{uri}/api/messages/{id}/", auth:auth, json:JsonConvert.SerializeObject(dataDict));
@@ -124,6 +142,8 @@ public class WebHandler : RegulatorSingleton<WebHandler>
         while (queries.Count > 0)
         {
             var query = queries.Dequeue();
+            AdjustStringForHttps(ref query);
+            Debug.Log("Query: " + query);
             
             try {
                 var msg = await Request.Get(query);
@@ -150,5 +170,12 @@ public class WebHandler : RegulatorSingleton<WebHandler>
         }
         
         return messages.ToArray();
+    }
+    
+    //TODO: Could be at a better place, ran out of time
+    private static void AdjustStringForHttps(ref string url)
+    {
+        if (url.Contains("http://"))
+            url = url.Replace("http://", "https://");
     }
 }

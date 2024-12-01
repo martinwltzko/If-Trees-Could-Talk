@@ -61,7 +61,7 @@ public class MusicPlayer : MonoBehaviour
     }
     public void SetInstrumentalMusicParameter(MusicInstrumentalTrack trackObject)
     {
-        _musicEventInstance.setParameterByName("track", (float)trackObject);
+        _musicEventInstance.setParameterByName("instrumental_track", (float)trackObject);
     }
     
     

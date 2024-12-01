@@ -1,48 +1,35 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
-[CreateAssetMenu(fileName = "DynamicGameEvent", menuName = "Global/Events/Dynamic Game Event")]
-public class DynamicGameEvent : GameEvent
+public class DynamicGameEvent<T> : GameEvent
 {
-    public enum EventType
-    {
-        TOGGLE,
-        INT,
-        FLOAT,
-        OBJECT
-    }
+    private readonly List<IGameEventListener<T>> _genericListeners = new();
+    public T Value { get; private set; }
 
-    public EventType Type;
-    public object Meta;
-
-    [ReadOnly, ShowIf("Type", EventType.TOGGLE)] public bool boolValue;
-    [ReadOnly, ShowIf("Type", EventType.INT)] public int intValue;
-    [ReadOnly, ShowIf("Type", EventType.FLOAT)] public float floatValue;
-
-
-    public void Raise(object sender)
+    public void Raise(T value)
     {
-        Meta = sender;
-        base.Raise(sender);
-    }
-    
-    public void Raise(bool value)
-    {
-        base.Raise(value);
-    }
-    
-    public override void Raise()
-    {
-        switch (Type)
+        Debug.Log($"Dynamic event raised with value: {value} and listeners: {_genericListeners.Count}");
+        Value = value;
+        
+        for (int i = _genericListeners.Count - 1; i >= 0; i--)
         {
-            case EventType.INT:
-                base.Raise<int>(intValue);
-                break;
-            case EventType.FLOAT:
-                base.Raise<float>(floatValue);
-                break;
+            _genericListeners[i].OnEventRaised(value);
+        }
+    }
+
+    public void RegisterListener(IGameEventListener<T> listener)
+    {
+        if (!_genericListeners.Contains(listener))
+        {
+            _genericListeners.Add(listener);
+        }
+    }
+
+    public void UnregisterListener(IGameEventListener<T> listener)
+    {
+        if (_genericListeners.Contains(listener))
+        {
+            _genericListeners.Remove(listener);
         }
     }
 }

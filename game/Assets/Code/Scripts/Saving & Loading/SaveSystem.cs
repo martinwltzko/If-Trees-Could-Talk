@@ -12,6 +12,7 @@ public static class SaveSystem
     private const string InvertX = "InvertX";
     private const string ToggleBackground = "ToggleBackground";
     private const string MessageAmount = "MessageAmount";
+    private const string TutorialPlayed = "TutorialPlayed";
     
     public enum SaveVariable
     {
@@ -24,7 +25,8 @@ public static class SaveSystem
         InvertY,
         InvertX,
         TextBackground,
-        MessageAmount
+        MessageAmount,
+        TutorialPlayed,
     }
     
     public static void SaveFloat(SaveVariable variable, float value)
@@ -60,6 +62,9 @@ public static class SaveSystem
                 break;
             case SaveVariable.MessageAmount:
                 PlayerPrefs.SetFloat(MessageAmount, value);
+                break;
+            case SaveVariable.TutorialPlayed:
+                PlayerPrefs.SetFloat(TutorialPlayed, value);
                 break;
             default:
                 Debug.LogWarning($"(SaveSystem) Variable not found {variable}");
@@ -103,6 +108,9 @@ public static class SaveSystem
                 break;
             case SaveVariable.MessageAmount:
                 value = PlayerPrefs.GetFloat(MessageAmount, 0f);
+                break;
+            case SaveVariable.TutorialPlayed:
+                value = PlayerPrefs.GetFloat(TutorialPlayed, 0f);
                 break;
             default:
                 Debug.LogWarning($"(SaveSystem) Variable not found {variable}");

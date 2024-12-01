@@ -1,24 +1,68 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Sirenix.OdinInspector;
+using UnityEngine.Serialization;
 
 public class UnityDynamicGameEventListener : MonoBehaviour, IGameEventListener
 {
-    [SerializeField] private ObjectEventListener _gameEventListenerWithObject;
-    [SerializeField] private FloatEventListener _gameEventListenerWithFloat;
-    [SerializeField] private IntEventListener _gameEventListenerWithInt;
+    [SerializeField] private List<TransformEventListener> gameEventListenerWithTransform;
+    [SerializeField] private List<FloatEventListener> _gameEventListenerWithFloat;
+    [SerializeField] private List<IntEventListener> _gameEventListenerWithInt;
+    [SerializeField] private List<BoolEventListener> _gameEventListenerWithBool;
+
+    private void OnEnable()
+    {
+        foreach (TransformEventListener eventListener in gameEventListenerWithTransform)
+        {
+            eventListener.OnEnable();
+        }
+        foreach (FloatEventListener eventListener in _gameEventListenerWithFloat)
+        {
+            eventListener.OnEnable();
+        }
+        foreach (IntEventListener eventListener in _gameEventListenerWithInt)
+        {
+            eventListener.OnEnable();
+        }
+        foreach (BoolEventListener eventListener in _gameEventListenerWithBool)
+        {
+            eventListener.OnEnable();
+        }
+    }
+
+    private void OnDisable()
+    {
+        foreach (TransformEventListener eventListener in gameEventListenerWithTransform)
+        {
+            eventListener.OnDisable();
+        }
+        foreach (FloatEventListener eventListener in _gameEventListenerWithFloat)
+        {
+            eventListener.OnDisable();
+        }
+        foreach (IntEventListener eventListener in _gameEventListenerWithInt)
+        {
+            eventListener.OnDisable();
+        }
+        foreach (BoolEventListener eventListener in _gameEventListenerWithBool)
+        {
+            eventListener.OnDisable();
+        }
+    }
 }
 
 [Serializable]
-public class ObjectEventListener : IGameEventListener
+public class TransformEventListener : IGameEventListener<Transform>
 {
-    public DynamicGameEvent @event;
-    public UnityEvent<object> response;
+    public TransformGameEvent @event;
+    public UnityEvent<Transform> response;
     
-    public void OnEventRaised()
+    public void OnEventRaised(Transform value)
     {
-        response?.Invoke(@event.Meta);
+        Debug.Log("Transform event raised with transform: " + @event.Value.name);
+        response?.Invoke(value);
     }
 
     public void OnEnable()
@@ -33,14 +77,15 @@ public class ObjectEventListener : IGameEventListener
 }
 
 [Serializable]
-public class FloatEventListener : IGameEventListener
+public class FloatEventListener : IGameEventListener<float>
 {
-    public DynamicGameEvent @event;
+    public FloatGameEvent @event;
     public UnityEvent<float> response;
     
-    public void OnEventRaised()
+    public void OnEventRaised(float value)
     {
-        response?.Invoke((float)@event.Meta);
+        Debug.Log("Float event raised with value: " + @event.Value);
+        response?.Invoke(value);
     }
 
     public void OnEnable()
@@ -55,14 +100,61 @@ public class FloatEventListener : IGameEventListener
 }
 
 [Serializable]
-public class IntEventListener : IGameEventListener
+public class BoolEventListener : IGameEventListener<bool>
 {
-    public DynamicGameEvent @event;
+    public BoolGameEvent @event;
+    public UnityEvent<bool> response;
+    
+    public void OnEventRaised(bool value)
+    {
+        Debug.Log("Bool event raised with value: " + @event.Value);
+        response?.Invoke(value);
+    }
+
+    public void OnEnable()
+    {
+        if(@event != null) @event.RegisterListener(this);
+    }
+
+    public void OnDisable()
+    {
+        if(@event != null) @event.UnregisterListener(this);
+    }
+}
+
+[Serializable]
+public class IntEventListener : IGameEventListener<int>
+{
+    public IntGameEvent @event;
     public UnityEvent<int> response;
     
-    public void OnEventRaised()
+    public void OnEventRaised(int value)
     {
-        response?.Invoke((int)@event.Meta);
+        Debug.Log("Int event raised with value: " + @event.Value);
+        response?.Invoke(value);
+    }
+
+    public void OnEnable()
+    {
+        if(@event != null) @event.RegisterListener(this);
+    }
+
+    public void OnDisable()
+    {
+        if(@event != null) @event.UnregisterListener(this);
+    }
+}
+
+[Serializable]
+public class ComponentEventListener : IGameEventListener<Component>
+{
+    public ComponentGameEvent @event;
+    public UnityEvent<Component> response;
+    
+    public void OnEventRaised(Component value)
+    {
+        Debug.Log("Int event raised with value: " + @event.Value);
+        response?.Invoke(value);
     }
 
     public void OnEnable()
