@@ -5,12 +5,22 @@ using UnityEngine.Events;
 using Sirenix.OdinInspector;
 using UnityEngine.Serialization;
 
+/// <summary>
+/// Versatile class that allows to define responds for all scriptable events
+/// </summary>
 public class UnityDynamicGameEventListener : MonoBehaviour, IGameEventListener
 {
+    [SerializeField] private List<GameEventListener> gameEventListener;
     [SerializeField] private List<TransformEventListener> gameEventListenerWithTransform;
-    [SerializeField] private List<FloatEventListener> _gameEventListenerWithFloat;
-    [SerializeField] private List<IntEventListener> _gameEventListenerWithInt;
-    [SerializeField] private List<BoolEventListener> _gameEventListenerWithBool;
+    
+    [FormerlySerializedAs("_gameEventListenerWithFloat")] 
+    [SerializeField] private List<FloatEventListener> gameEventListenerWithFloat;
+    
+    [FormerlySerializedAs("_gameEventListenerWithInt")] 
+    [SerializeField] private List<IntEventListener> gameEventListenerWithInt;
+    
+    [FormerlySerializedAs("_gameEventListenerWithBool")] 
+    [SerializeField] private List<BoolEventListener> gameEventListenerWithBool;
 
     private void OnEnable()
     {
@@ -18,15 +28,15 @@ public class UnityDynamicGameEventListener : MonoBehaviour, IGameEventListener
         {
             eventListener.OnEnable();
         }
-        foreach (FloatEventListener eventListener in _gameEventListenerWithFloat)
+        foreach (FloatEventListener eventListener in gameEventListenerWithFloat)
         {
             eventListener.OnEnable();
         }
-        foreach (IntEventListener eventListener in _gameEventListenerWithInt)
+        foreach (IntEventListener eventListener in gameEventListenerWithInt)
         {
             eventListener.OnEnable();
         }
-        foreach (BoolEventListener eventListener in _gameEventListenerWithBool)
+        foreach (BoolEventListener eventListener in gameEventListenerWithBool)
         {
             eventListener.OnEnable();
         }
@@ -38,15 +48,15 @@ public class UnityDynamicGameEventListener : MonoBehaviour, IGameEventListener
         {
             eventListener.OnDisable();
         }
-        foreach (FloatEventListener eventListener in _gameEventListenerWithFloat)
+        foreach (FloatEventListener eventListener in gameEventListenerWithFloat)
         {
             eventListener.OnDisable();
         }
-        foreach (IntEventListener eventListener in _gameEventListenerWithInt)
+        foreach (IntEventListener eventListener in gameEventListenerWithInt)
         {
             eventListener.OnDisable();
         }
-        foreach (BoolEventListener eventListener in _gameEventListenerWithBool)
+        foreach (BoolEventListener eventListener in gameEventListenerWithBool)
         {
             eventListener.OnDisable();
         }
