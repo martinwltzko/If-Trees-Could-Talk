@@ -1,17 +1,31 @@
 # If Trees Could Talk (Game Off 2024)
 
-An async multiplayer prototype built with Unity (6000.0.23f1) and a Django REST API.
+A narrative **asynchronous multiplayer** experiment where players leave messages in a shared
+forest — not to communicate in real-time, but to create a **collective memory** of everyone
+who has ever played.
 
-- Backend: Django 5, Django REST Framework, PostgreSQL, Nginx, Docker
-- Client: Unity 6000.0.23f1 (a.k.a. Unity 6)
-- License: MIT
+During the game jam release, players wrote **542+ in-game messages**. These messages have since
+been archived into a **time-capsule build**, preserving the emotional traces of the original
+player community.
 
-## Game Jam
-Originally created for GitHub Game Off 2024.
-- Itch page: https://itsmawal.itch.io/if-trees-could-talk
-- Jam submission: https://itch.io/jam/game-off-2024/rate/3148425
+**Play the Time-Capsule Build:** https://itsmawal.itch.io/if-trees-could-talk  
+**Jam Submission:** https://itch.io/jam/game-off-2024/rate/3148425
 
-## Overview
+## Why This Project Is Interesting
+
+While this project was created for GitHub Game Off 2024, most jam games are self-contained.  
+This one is **client/server**, persistent, and shaped by its players.
+
+- Unity client ↔ Django REST backend
+- Anonymous player identities via Unity Player Auth
+- Messages tied to **3D world-space coordinates** and surface normals
+- Server-side validation & owner-only edit permissions
+- Fully containerized backend deployment (PostgreSQL, Gunicorn, Nginx, Docker)
+
+This allowed the forest to **remember**.  
+Players returned days later to see how the world — and the people in it — had changed.
+
+## Implementation Details (for developers)
 This repo contains two main parts:
 - `game/` — Unity project with gameplay prototype.
 - `api/` — Django REST API used by the game for auth and persistent world messages.
@@ -187,9 +201,6 @@ This project used several third-party Unity assets during development. They are 
 - Nginx proxies 80→443 and upstreams to Gunicorn at `backend:443` (Docker network). Ensure certs are present at `api/nginx/certs`.
 - Set `DEBUG=False`, strong `SECRET_KEY`, and proper `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`.
 - Database is Postgres 14 via the included service; use managed Postgres in production.
-
-## Contributing
-PRs and issues welcome. Please open issues for bugs or feature ideas. For larger changes, start a discussion.
 
 ## License
 MIT — see `LICENSE`.
